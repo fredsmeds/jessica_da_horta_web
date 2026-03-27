@@ -1,0 +1,13 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Large files (>25MB)
+docs/Portfolio/Portfolio 3D-A3JessicaDHG_issuu.pdf
+
+# Local env
+.env
+.env.local
+.dev.vars
