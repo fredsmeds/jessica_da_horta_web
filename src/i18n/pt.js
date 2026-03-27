@@ -298,11 +298,11 @@ const pt = {
 
     // Disclaimer / travel fee
     disclaimerTitle: 'Taxa de Deslocação',
-    disclaimerText: 'Taxa base: 45€. Deslocações que excedam 50 km de raio terão um custo adicional de 0,40€/km.',
+    disclaimerText: 'Valor base: 90€ — inclui visita e consultoria no local (1 a 2 horas). Taxa de deslocação: 0,40€/km (ida e volta desde a base). O valor base é abatido no total do projeto caso o cliente avance com os serviços.',
     disclaimerCalc: 'A calcular distância...',
     disclaimerDist: 'Distância estimada: {km} km',
-    disclaimerWithin: 'Dentro do raio de 50 km — sem custo adicional.',
-    disclaimerExtra: 'Custo adicional estimado: {fee}€ (+{km} km × 0,40€)',
+    disclaimerWithin: 'Sem taxa de deslocação adicional.',
+    disclaimerExtra: 'Taxa de deslocação estimada: {fee}€ ({km} km ida e volta × 0,40€/km)',
     disclaimerError: 'Não foi possível calcular a distância automaticamente.',
 
     // Preferred visit date/time (Step 9)

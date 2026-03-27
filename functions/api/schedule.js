@@ -69,9 +69,7 @@ export async function onRequestPost(context) {
     }
 
     const travelRow = distanceKm
-      ? row('Taxa de deslocação', travelFee > 0
-          ? `45€ base + ${travelFee}€ extra (${distanceKm} km, +${distanceKm - 50} km × 0,40€)`
-          : `45€ base — dentro do raio de 50 km (${distanceKm} km)`)
+      ? row('Taxa de deslocação', `90€ base + ${travelFee}€ deslocação (${distanceKm} km × 2 ida/volta × 0,40€/km)`)
       : ''
 
     const attachmentNote = allAttachments.length > 0

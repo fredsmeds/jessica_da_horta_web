@@ -181,11 +181,12 @@ function Step1({ data, set, t }) {
         const results = await res.json()
         if (!results.length) { setDistInfo({ error: true }); return }
         const km = Math.round(haversine(JESSICA_LAT, JESSICA_LNG, parseFloat(results[0].lat), parseFloat(results[0].lon)))
-        const extraKm = Math.max(0, km - 50)
-        const fee = Math.round(extraKm * 0.40 * 100) / 100
-        setDistInfo({ km, fee })
+        const roundTripKm = km * 2
+        const fee = Math.round(roundTripKm * 0.40 * 100) / 100
+        setDistInfo({ km, fee, roundTripKm })
         set('distanceKm', km)
         set('travelFee', fee)
+        set('roundTripKm', roundTripKm)
       } catch {
         setDistInfo({ error: true })
       }
@@ -234,10 +235,7 @@ function Step1({ data, set, t }) {
             {distInfo.km !== undefined && (
               <>
                 <span>{s.disclaimerDist.replace('{km}', distInfo.km)}</span>
-                {distInfo.fee > 0
-                  ? <span className="sv-disclaimer__extra">{s.disclaimerExtra.replace('{fee}', distInfo.fee).replace('{km}', Math.max(0, distInfo.km - 50))}</span>
-                  : <span className="sv-disclaimer__ok">{s.disclaimerWithin}</span>
-                }
+                <span className="sv-disclaimer__extra">{s.disclaimerExtra.replace('{fee}', distInfo.fee).replace('{km}', distInfo.roundTripKm || 0)}</span>
               </>
             )}
           </div>
@@ -573,7 +571,7 @@ function PrivacyModal({ t, onClose }) {
 const initialData = {
   // Step 1
   fullName: '', phone: '', email: '', address: '', postalCode: '',
-  distanceKm: null, travelFee: null,
+  distanceKm: null, travelFee: null, roundTripKm: null,
   // Step 2
   totalArea: '', interventionArea: '', limits: '',
   topo: '', topoFormat: '', topoFile: null,

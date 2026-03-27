@@ -123,9 +123,7 @@ export async function generatePdf(data) {
   drawRow('Código Postal', val(data.postalCode))
   if (data.distanceKm) {
     drawRow('Distância estimada', `${data.distanceKm} km`)
-    drawRow('Taxa de deslocação', data.travelFee > 0
-      ? `45€ base + ${data.travelFee}€ extra (+${data.distanceKm - 50} km × 0,40€)`
-      : '45€ base (dentro do raio de 50 km)')
+    drawRow('Taxa de deslocação', `90€ base + ${data.travelFee}€ deslocação (${data.distanceKm} km × 2 × 0,40€/km)`)
   }
   y += 3
 

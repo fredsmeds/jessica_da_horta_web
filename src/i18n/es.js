@@ -280,11 +280,11 @@ const es = {
 
     // Disclaimer / travel fee
     disclaimerTitle: 'Tasa de Desplazamiento',
-    disclaimerText: 'Tarifa base: 45€. Los desplazamientos que superen un radio de 50 km tienen un coste adicional de 0,40€/km.',
+    disclaimerText: 'Tarifa base: 90€ — incluye visita y consultoría en el lugar (1 a 2 horas). Tasa de desplazamiento: 0,40€/km (ida y vuelta desde la base). La tarifa base se descuenta del coste total del proyecto si el cliente contrata los servicios.',
     disclaimerCalc: 'Calculando distancia...',
     disclaimerDist: 'Distancia estimada: {km} km',
-    disclaimerWithin: 'Dentro del radio de 50 km — sin coste adicional.',
-    disclaimerExtra: 'Coste adicional estimado: {fee}€ (+{km} km × 0,40€)',
+    disclaimerWithin: 'Sin tasa de desplazamiento adicional.',
+    disclaimerExtra: 'Tasa de desplazamiento estimada: {fee}€ ({km} km ida y vuelta × 0,40€/km)',
     disclaimerError: 'No fue posible calcular la distancia automáticamente.',
 
     // Preferred visit date/time (Step 9)

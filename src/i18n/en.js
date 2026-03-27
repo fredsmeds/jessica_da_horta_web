@@ -280,11 +280,11 @@ const en = {
 
     // Disclaimer / travel fee
     disclaimerTitle: 'Travel Fee',
-    disclaimerText: 'Base fee: €45. Travel beyond a 50 km radius carries an additional charge of €0.40/km.',
+    disclaimerText: 'Base fee: €90 — includes an on-site visit and consultancy (1 to 2 hours). Travel surcharge: €0.40/km (return journey from base). The base fee is deducted from the total project cost if the client proceeds with the services.',
     disclaimerCalc: 'Calculating distance...',
     disclaimerDist: 'Estimated distance: {km} km',
-    disclaimerWithin: 'Within 50 km radius — no additional travel cost.',
-    disclaimerExtra: 'Estimated additional travel cost: €{fee} (+{km} km × €0.40)',
+    disclaimerWithin: 'No additional travel charge.',
+    disclaimerExtra: 'Estimated travel surcharge: €{fee} ({km} km return × €0.40/km)',
     disclaimerError: 'Distance could not be calculated automatically.',
 
     // Preferred visit date/time (Step 9)
