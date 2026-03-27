@@ -258,6 +258,7 @@ const es = {
     },
     prioritiesLabel: '¿Hay elementos o características que considera esenciales y deben priorizarse dentro de su presupuesto?',
     additionalDescLabel: 'Describa su situación con más detalle si es necesario:',
+    hiredBeforeLabel: '¿Ha contratado alguna vez los servicios de un arquitecto paisajista?',
 
     s8title: 'Mantenimiento Actual del Jardín',
     s8desc: '',

@@ -258,6 +258,7 @@ const en = {
     },
     prioritiesLabel: 'Are there specific features or elements you consider essential and must be prioritised within your budget?',
     additionalDescLabel: 'Describe your situation in more detail if necessary:',
+    hiredBeforeLabel: 'Have you ever hired the services of a landscape architect before?',
 
     s8title: 'Current Garden Maintenance',
     s8desc: '',

@@ -274,6 +274,7 @@ const pt = {
     },
     prioritiesLabel: 'Há elementos ou características que considera essenciais e devem ser prioritizados dentro do seu orçamento?',
     additionalDescLabel: 'Descreva a sua situação com mais detalhe se necessário:',
+    hiredBeforeLabel: 'Já alguma vez contratou os serviços de um arquitecto paisagista?',
 
     // Step 8
     s8title: 'Manutenção Atual do Jardim',

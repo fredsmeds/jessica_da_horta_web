@@ -444,6 +444,7 @@ function Step6({ data, set, t }) {
 
 function Step7({ data, set, t }) {
   const s = t.schedule
+  const yesNo = [{ value: 'yes', label: s.yes }, { value: 'no', label: s.no }]
   const seasonOptions = Object.entries(s.seasons).map(([k, v]) => ({ value: k, label: v }))
   return (
     <>
@@ -459,6 +460,10 @@ function Step7({ data, set, t }) {
       <div className="form-group">
         <label className="form-label">{s.additionalDescLabel}</label>
         <textarea className="form-textarea" value={data.additionalDesc} onChange={e => set('additionalDesc', e.target.value)} />
+      </div>
+      <div className="form-group">
+        <label className="form-label">{s.hiredBeforeLabel} <span className="required">*</span></label>
+        <RadioGroup name="hiredBefore" options={yesNo} value={data.hiredBefore} onChange={v => set('hiredBefore', v)} />
       </div>
     </>
   )
@@ -586,7 +591,7 @@ const initialData = {
   // Step 6
   serviceType: '',
   // Step 7
-  installation: '', priorities: '', additionalDesc: '',
+  installation: '', priorities: '', additionalDesc: '', hiredBefore: '',
   // Step 8
   maintenanceTeam: '', maintenanceDetails: '',
   // Step 9
