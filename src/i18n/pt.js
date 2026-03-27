@@ -264,6 +264,8 @@ const pt = {
       '4': '4 — Gestão e Monitorização de Manutenção',
     },
 
+    hiredArchitectLabel: 'Já alguma vez contratou os serviços de um arquiteto paisagista?',
+
     // Step 7
     s7title: 'Calendário',
     s7desc: 'Ajuda-nos a alinhar o planeamento com as suas expectativas. O design de jardim é desenvolvido tendo em conta as épocas de plantação ideais — preferencialmente Outono, ou Primavera como último recurso.',
@@ -274,7 +276,6 @@ const pt = {
     },
     prioritiesLabel: 'Há elementos ou características que considera essenciais e devem ser prioritizados dentro do seu orçamento?',
     additionalDescLabel: 'Descreva a sua situação com mais detalhe se necessário:',
-    hiredBeforeLabel: 'Já alguma vez contratou os serviços de um arquitecto paisagista?',
 
     // Step 8
     s8title: 'Manutenção Atual do Jardim',
@@ -303,7 +304,7 @@ const pt = {
     disclaimerCalc: 'A calcular distância...',
     disclaimerDist: 'Distância estimada: {km} km',
     disclaimerWithin: 'Sem taxa de deslocação adicional.',
-    disclaimerExtra: 'Taxa de deslocação estimada: {fee}€ ({km} km ida e volta × 0,40€/km)',
+    postalCodeRequired: 'Por favor, introduza o seu código postal para continuar.',
     disclaimerError: 'Não foi possível calcular a distância automaticamente.',
 
     // Preferred visit date/time (Step 9)

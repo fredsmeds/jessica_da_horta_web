@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useLanguage } from '../i18n/index.jsx'
-import { generatePdf } from '../utils/generatePdf.js'
+import { generateClientPdf, generateJessicaPdf } from '../utils/generatePdf.js'
 
 const TOTAL_STEPS = 9
 const JESSICA_LAT = 38.71605105146495
@@ -161,7 +161,7 @@ function CheckGroup({ options, values, onChange }) {
 
 // ── Step 1 ────────────────────────────────────────────────────────────────────
 
-function Step1({ data, set, t }) {
+function Step1({ data, set, t, stepError }) {
   const s = t.schedule
   const [distInfo, setDistInfo] = useState(null)
 
@@ -218,6 +218,7 @@ function Step1({ data, set, t }) {
       <div className="form-group" style={{ maxWidth: '220px' }}>
         <label className="form-label">{s.postalCodeLabel} <span className="required">*</span></label>
         <input className="form-input" type="text" required placeholder="0000-000" value={data.postalCode} onChange={e => set('postalCode', e.target.value)} />
+        {stepError && <p className="file-upload__error" style={{ marginTop: '0.35rem' }}>{stepError}</p>}
       </div>
 
       <div className="sv-disclaimer">
@@ -233,10 +234,7 @@ function Step1({ data, set, t }) {
             {distInfo.loading && <span className="sv-disclaimer__calc">{s.disclaimerCalc}</span>}
             {distInfo.error && <span className="sv-disclaimer__error">{s.disclaimerError}</span>}
             {distInfo.km !== undefined && (
-              <>
-                <span>{s.disclaimerDist.replace('{km}', distInfo.km)}</span>
-                <span className="sv-disclaimer__extra">{s.disclaimerExtra.replace('{fee}', distInfo.fee).replace('{km}', distInfo.roundTripKm || 0)}</span>
-              </>
+              <span>{s.disclaimerDist.replace('{km}', distInfo.km)}</span>
             )}
           </div>
         )}
@@ -429,12 +427,17 @@ function Step5({ data, set, t }) {
 function Step6({ data, set, t }) {
   const s = t.schedule
   const serviceOptions = Object.entries(s.services).map(([k, v]) => ({ value: k, label: v }))
+  const yesNo = [{ value: 'yes', label: s.yes }, { value: 'no', label: s.no }]
   return (
     <>
       <p className="sv-step-desc">{s.s6desc}</p>
       <div className="form-group">
         <label className="form-label">{s.serviceTypeLabel} <span className="required">*</span></label>
         <RadioGroup name="serviceType" options={serviceOptions} value={data.serviceType} onChange={v => set('serviceType', v)} />
+      </div>
+      <div className="form-group">
+        <label className="form-label">{s.hiredArchitectLabel} <span className="required">*</span></label>
+        <RadioGroup name="hiredArchitect" options={yesNo} value={data.hiredArchitect} onChange={v => set('hiredArchitect', v)} />
       </div>
     </>
   )
@@ -444,7 +447,6 @@ function Step6({ data, set, t }) {
 
 function Step7({ data, set, t }) {
   const s = t.schedule
-  const yesNo = [{ value: 'yes', label: s.yes }, { value: 'no', label: s.no }]
   const seasonOptions = Object.entries(s.seasons).map(([k, v]) => ({ value: k, label: v }))
   return (
     <>
@@ -460,10 +462,6 @@ function Step7({ data, set, t }) {
       <div className="form-group">
         <label className="form-label">{s.additionalDescLabel}</label>
         <textarea className="form-textarea" value={data.additionalDesc} onChange={e => set('additionalDesc', e.target.value)} />
-      </div>
-      <div className="form-group">
-        <label className="form-label">{s.hiredBeforeLabel} <span className="required">*</span></label>
-        <RadioGroup name="hiredBefore" options={yesNo} value={data.hiredBefore} onChange={v => set('hiredBefore', v)} />
       </div>
     </>
   )
@@ -589,9 +587,9 @@ const initialData = {
   // Step 5
   plantingStyle: '', pathStyle: '', plantTypes: [], colors: '', desiredElements: [],
   // Step 6
-  serviceType: '',
+  serviceType: '', hiredArchitect: '',
   // Step 7
-  installation: '', priorities: '', additionalDesc: '', hiredBefore: '',
+  installation: '', priorities: '', additionalDesc: '',
   // Step 8
   maintenanceTeam: '', maintenanceDetails: '',
   // Step 9
@@ -608,23 +606,34 @@ export default function ScheduleVisit() {
   const [data, setData] = useState(initialData)
   const [status, setStatus] = useState(null)
   const [showPrivacy, setShowPrivacy] = useState(false)
+  const [stepError, setStepError] = useState('')
 
   const set = (key, val) => setData(prev => ({ ...prev, [key]: val }))
 
   const stepLabel = t.schedule.stepOf.replace('{current}', step).replace('{total}', TOTAL_STEPS)
 
-  const handleNext = () => { if (step < TOTAL_STEPS) setStep(s => s + 1) }
-  const handlePrev = () => { if (step > 1) setStep(s => s - 1) }
+  const handleNext = () => {
+    if (step === 1 && !data.postalCode.trim()) {
+      setStepError(t.schedule.postalCodeRequired)
+      return
+    }
+    setStepError('')
+    if (step < TOTAL_STEPS) setStep(s => s + 1)
+  }
+  const handlePrev = () => { setStepError(''); if (step > 1) setStep(s => s - 1) }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!data.privacy) return
     setStatus('loading')
 
-    // Step 1: Generate PDF — if this fails, show error without calling /api/schedule
-    let pdfBase64
+    // Step 1: Generate both PDFs — if this fails, show error without calling /api/schedule
+    let clientPdfBase64, jessicaPdfBase64
     try {
-      pdfBase64 = await generatePdf(data)
+      ;[clientPdfBase64, jessicaPdfBase64] = await Promise.all([
+        generateClientPdf(data),
+        generateJessicaPdf(data),
+      ])
     } catch (pdfErr) {
       console.error('PDF generation error:', pdfErr)
       setStatus('pdfError')
@@ -643,7 +652,7 @@ export default function ScheduleVisit() {
       const res = await fetch('/api/schedule', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, pdfBase64, attachments }),
+        body: JSON.stringify({ ...data, clientPdfBase64, jessicaPdfBase64, attachments }),
       })
       if (!res.ok) {
         const body = await res.json().catch(() => ({}))
@@ -707,7 +716,7 @@ export default function ScheduleVisit() {
             {status === 'pdfError' && <div className="alert alert-error">Ocorreu um erro ao gerar o documento PDF. Por favor tente novamente.</div>}
 
             <form onSubmit={step === TOTAL_STEPS ? handleSubmit : e => { e.preventDefault(); handleNext() }}>
-              {step === 1 && <Step1 data={data} set={set} t={t} />}
+              {step === 1 && <Step1 data={data} set={set} t={t} stepError={stepError} />}
               {step === 2 && <Step2 data={data} set={set} t={t} />}
               {step === 3 && <Step3 data={data} set={set} t={t} />}
               {step === 4 && <Step4 data={data} set={set} t={t} />}

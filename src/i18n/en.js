@@ -249,6 +249,8 @@ const en = {
       '4': '4 — Management and Maintenance Monitoring',
     },
 
+    hiredArchitectLabel: 'Have you ever hired the services of a landscape architect before?',
+
     s7title: 'Timeframes',
     s7desc: 'This helps us align planning with your expectations. Garden designs are developed with ideal planting seasons in mind — preferably Autumn, or Spring as a last resort.',
     installationLabel: 'Installation / Implementation:',
@@ -258,7 +260,6 @@ const en = {
     },
     prioritiesLabel: 'Are there specific features or elements you consider essential and must be prioritised within your budget?',
     additionalDescLabel: 'Describe your situation in more detail if necessary:',
-    hiredBeforeLabel: 'Have you ever hired the services of a landscape architect before?',
 
     s8title: 'Current Garden Maintenance',
     s8desc: '',
@@ -285,7 +286,7 @@ const en = {
     disclaimerCalc: 'Calculating distance...',
     disclaimerDist: 'Estimated distance: {km} km',
     disclaimerWithin: 'No additional travel charge.',
-    disclaimerExtra: 'Estimated travel surcharge: €{fee} ({km} km return × €0.40/km)',
+    postalCodeRequired: 'Please enter your postal code to continue.',
     disclaimerError: 'Distance could not be calculated automatically.',
 
     // Preferred visit date/time (Step 9)

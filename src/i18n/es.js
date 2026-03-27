@@ -249,6 +249,8 @@ const es = {
       '4': '4 — Gestión y Seguimiento de Mantenimiento',
     },
 
+    hiredArchitectLabel: '¿Ha contratado alguna vez los servicios de un arquitecto paisajista?',
+
     s7title: 'Calendario',
     s7desc: 'Esto nos ayuda a alinear la planificación con sus expectativas. Los diseños de jardín se desarrollan teniendo en cuenta las temporadas de plantación ideales — preferiblemente Otoño, o Primavera como último recurso.',
     installationLabel: 'Instalación / Implementación:',
@@ -258,7 +260,6 @@ const es = {
     },
     prioritiesLabel: '¿Hay elementos o características que considera esenciales y deben priorizarse dentro de su presupuesto?',
     additionalDescLabel: 'Describa su situación con más detalle si es necesario:',
-    hiredBeforeLabel: '¿Ha contratado alguna vez los servicios de un arquitecto paisajista?',
 
     s8title: 'Mantenimiento Actual del Jardín',
     s8desc: '',
@@ -285,7 +286,7 @@ const es = {
     disclaimerCalc: 'Calculando distancia...',
     disclaimerDist: 'Distancia estimada: {km} km',
     disclaimerWithin: 'Sin tasa de desplazamiento adicional.',
-    disclaimerExtra: 'Tasa de desplazamiento estimada: {fee}€ ({km} km ida y vuelta × 0,40€/km)',
+    postalCodeRequired: 'Por favor, introduzca su código postal para continuar.',
     disclaimerError: 'No fue posible calcular la distancia automáticamente.',
 
     // Preferred visit date/time (Step 9)

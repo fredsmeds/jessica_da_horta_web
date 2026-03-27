@@ -1,8 +1,5 @@
 import jsPDF from 'jspdf'
 
-const JESSICA_LAT = 38.71605105146495
-const JESSICA_LNG = -9.415024799281479
-
 // Convert any image src (URL or base64 dataURL) to PNG dataURL via canvas
 // Always resolves (never rejects) — returns null on any failure
 function toCanvasPng(src) {
@@ -43,7 +40,30 @@ const SVC_LABELS = {
   '4': '4 — Gestão e Manutenção',
 }
 
-export async function generatePdf(data) {
+function calculateEstimate(data) {
+  const breakdown = []
+  const visitFee = 90 + (data.roundTripKm || 0) * 0.40
+  breakdown.push({ label: 'Visita técnica inicial (base €90 + deslocação)', amount: visitFee })
+  if (data.soilAnalysis === 'no') breakdown.push({ label: 'Análise de solo', amount: 250 })
+  if (data.waterAnalysis === 'no') breakdown.push({ label: 'Análise de água', amount: 150 })
+  const srcCosts = { well: 200, borehole: 150, rainwater: 300, tank: 250, public: 0 }
+  for (const s of (data.waterSources || [])) {
+    if (srcCosts[s]) breakdown.push({ label: `Fonte de água: ${s}`, amount: srcCosts[s] })
+  }
+  const svcCosts = { '1A': 200, '1B': 450, '2A': 1200, '2B': 1200, '2C': 600, '3': 800, '4': 200 }
+  if (data.serviceType && svcCosts[data.serviceType] !== undefined)
+    breakdown.push({ label: SVC_LABELS[data.serviceType] || data.serviceType, amount: svcCosts[data.serviceType] })
+  const subtotal = breakdown.reduce((acc, i) => acc + i.amount, 0)
+  const notes = []
+  if (data.maintenanceTeam === 'yes') notes.push('Manutenção: +€80/mês (visita básica de jardim)')
+  const plantAdj = { mediterranean: 10, ornamental: 15, edible: 20, medicinal: 10 }
+  for (const pt of (data.plantTypes || [])) {
+    if (plantAdj[pt]) notes.push(`Plantas (${pt}): +${plantAdj[pt]}% sobre custo de materiais`)
+  }
+  return { breakdown, subtotal, notes }
+}
+
+async function buildPdf(data, forJessica = false) {
   const doc = new jsPDF('p', 'mm', 'a4')
   const W = 210, H = 297, M = 18
   const CW = W - 2 * M
@@ -72,7 +92,7 @@ export async function generatePdf(data) {
   doc.text('Jessica da Horta Garden Design', M + 23, 13)
   doc.setFontSize(8)
   doc.setTextColor(205, 212, 185)
-  doc.text('Pedido de Visita Técnica', M + 23, 19.5)
+  doc.text(forJessica ? 'Pedido de Visita Técnica — Uso Interno' : 'Pedido de Visita Técnica', M + 23, 19.5)
 
   y = 35
 
@@ -123,7 +143,9 @@ export async function generatePdf(data) {
   drawRow('Código Postal', val(data.postalCode))
   if (data.distanceKm) {
     drawRow('Distância estimada', `${data.distanceKm} km`)
-    drawRow('Taxa de deslocação', `90€ base + ${data.travelFee}€ deslocação (${data.distanceKm} km × 2 × 0,40€/km)`)
+    if (forJessica) {
+      drawRow('Taxa de deslocação', `90€ base + ${data.travelFee}€ deslocação (${data.distanceKm} km × 2 × 0,40€/km)`)
+    }
   }
   y += 3
 
@@ -175,6 +197,7 @@ export async function generatePdf(data) {
   // ── Section 6: Services ──────────────────────────────────
   drawSection('6. Serviços Pretendidos')
   drawRow('Tipo de serviço', SVC_LABELS[data.serviceType] || val(data.serviceType))
+  if (forJessica) drawRow('Arquiteto paisagista anterior', yn(data.hiredArchitect))
   y += 3
 
   // ── Section 7: Timeframes ────────────────────────────────
@@ -196,6 +219,49 @@ export async function generatePdf(data) {
   drawSection('9. Observações Adicionais')
   drawRow('Observações', val(data.observations))
   y += 3
+
+  // ── Section 10: Cost Estimate (Jessica only) ─────────────
+  if (forJessica) {
+    const { breakdown, subtotal, notes } = calculateEstimate(data)
+    checkPage(20)
+    drawSection('Estimativa de Custos (Uso Interno)')
+
+    for (const item of breakdown) {
+      checkPage(7)
+      doc.setFontSize(7.5)
+      doc.setTextColor(118, 118, 110)
+      doc.text(item.label, M, y)
+      doc.setTextColor(28, 28, 26)
+      doc.text(`€${item.amount.toFixed(2)}`, W - M, y, { align: 'right' })
+      y += 6
+    }
+
+    // Separator line + total
+    checkPage(14)
+    doc.setDrawColor(85, 91, 55)
+    doc.setLineWidth(0.4)
+    doc.line(M, y, W - M, y)
+    y += 5
+    doc.setFontSize(9)
+    doc.setFont('helvetica', 'bold')
+    doc.setTextColor(85, 91, 55)
+    doc.text('TOTAL ESTIMADO (excl. IVA)', M, y)
+    doc.text(`€${subtotal.toFixed(2)}`, W - M, y, { align: 'right' })
+    doc.setFont('helvetica', 'normal')
+    y += 8
+
+    // Notes (percentages, maintenance)
+    if (notes.length > 0) {
+      doc.setFontSize(7)
+      doc.setTextColor(118, 118, 110)
+      for (const note of notes) {
+        checkPage(5)
+        doc.text(`• ${note}`, M, y)
+        y += 4.5
+      }
+    }
+    y += 3
+  }
 
   // ── Images appendix ──────────────────────────────────────
   const imageFiles = [
@@ -243,3 +309,6 @@ export async function generatePdf(data) {
   // Return base64 without data URI prefix
   return doc.output('datauristring').split(',')[1]
 }
+
+export async function generateClientPdf(data) { return buildPdf(data, false) }
+export async function generateJessicaPdf(data) { return buildPdf(data, true) }

@@ -1,7 +1,8 @@
 /**
  * POST /api/schedule
  * Handles the Schedule a Visit form submission via Resend API
- * Sends full form data + PDF to Jessica and a confirmation + PDF to the customer
+ * Sends full form data + internal PDF (with pricing) to Jessica
+ * Sends a confirmation + client PDF (no pricing) to the customer
  */
 export async function onRequestPost(context) {
   const { request, env } = context
@@ -22,21 +23,26 @@ export async function onRequestPost(context) {
       soilAnalysis, waterAnalysis, waterSources, waterStorage,
       hasPets, petsDesc, petsAccess,
       plantingStyle, pathStyle, plantTypes, colors, desiredElements,
-      serviceType,
+      serviceType, hiredArchitect,
       installation, priorities, additionalDesc,
       maintenanceTeam, maintenanceDetails,
       preferredDate, preferredTime,
       observations,
-      distanceKm, travelFee,
-      pdfBase64,
+      distanceKm, travelFee, roundTripKm,
+      clientPdfBase64, jessicaPdfBase64,
       attachments = [],
     } = data
 
     const stripPrefix = b64 => (b64 && b64.includes(',') ? b64.split(',')[1] : b64)
+    const safeName = (fullName || 'cliente').replace(/\s+/g, '_')
 
     // Build Resend attachment objects
-    const pdfAttachment = pdfBase64
-      ? [{ filename: `Visita_JessicaDaHorta_${(fullName || 'cliente').replace(/\s+/g, '_')}.pdf`, content: stripPrefix(pdfBase64) }]
+    const jessicaPdfAttachment = jessicaPdfBase64
+      ? [{ filename: `JESSICA_Visita_${safeName}.pdf`, content: stripPrefix(jessicaPdfBase64) }]
+      : []
+
+    const clientPdfAttachment = clientPdfBase64
+      ? [{ filename: `Visita_JessicaDaHorta_${safeName}.pdf`, content: stripPrefix(clientPdfBase64) }]
       : []
 
     const imageAttachments = attachments.map(f => ({
@@ -44,7 +50,7 @@ export async function onRequestPost(context) {
       content: stripPrefix(f.data),
     }))
 
-    const allAttachments = [...pdfAttachment, ...imageAttachments]
+    const jessicaAttachments = [...jessicaPdfAttachment, ...imageAttachments]
 
     // ── HTML helpers ────────────────────────────────────────────────────────
     const row = (label, value) => `
@@ -72,9 +78,54 @@ export async function onRequestPost(context) {
       ? row('Taxa de deslocação', `90€ base + ${travelFee}€ deslocação (${distanceKm} km × 2 ida/volta × 0,40€/km)`)
       : ''
 
-    const attachmentNote = allAttachments.length > 0
-      ? `<p style="font-size:13px;color:#555b37;margin:16px 0 0;">📎 ${allAttachments.length} anexo(s) incluído(s) neste email.</p>`
+    const attachmentNote = jessicaAttachments.length > 0
+      ? `<p style="font-size:13px;color:#555b37;margin:16px 0 0;">📎 ${jessicaAttachments.length} anexo(s) incluído(s) neste email.</p>`
       : ''
+
+    // ── Pricing estimate (Jessica only) ─────────────────────────────────────
+    const breakdown = []
+    const visitFee = 90 + (roundTripKm || 0) * 0.40
+    breakdown.push({ label: 'Visita técnica inicial (base €90 + deslocação)', amount: visitFee })
+    if (soilAnalysis === 'no') breakdown.push({ label: 'Análise de solo', amount: 250 })
+    if (waterAnalysis === 'no') breakdown.push({ label: 'Análise de água', amount: 150 })
+    const srcCosts = { well: 200, borehole: 150, rainwater: 300, tank: 250, public: 0 }
+    for (const s of (Array.isArray(waterSources) ? waterSources : [])) {
+      if (srcCosts[s]) breakdown.push({ label: `Fonte de água: ${s}`, amount: srcCosts[s] })
+    }
+    const svcCosts = { '1A': 200, '1B': 450, '2A': 1200, '2B': 1200, '2C': 600, '3': 800, '4': 200 }
+    if (serviceType && svcCosts[serviceType] !== undefined)
+      breakdown.push({ label: serviceLabels[serviceType] || serviceType, amount: svcCosts[serviceType] })
+    const subtotal = breakdown.reduce((acc, i) => acc + i.amount, 0)
+    const notes = []
+    if (maintenanceTeam === 'yes') notes.push('Manutenção: +€80/mês (visita básica de jardim)')
+    const plantAdj = { mediterranean: 10, ornamental: 15, edible: 20, medicinal: 10 }
+    for (const pt of (Array.isArray(plantTypes) ? plantTypes : [])) {
+      if (plantAdj[pt]) notes.push(`Plantas (${pt}): +${plantAdj[pt]}% sobre custo de materiais`)
+    }
+
+    const estimateRows = breakdown.map(item =>
+      `<tr>
+        <td style="padding:6px 0;border-bottom:1px solid #f0f0ea;font-size:13px;color:#444;">${item.label}</td>
+        <td style="padding:6px 0;border-bottom:1px solid #f0f0ea;font-size:13px;text-align:right;color:#1a1a18;">€${item.amount.toFixed(2)}</td>
+      </tr>`
+    ).join('')
+
+    const notesHtml = notes.length
+      ? `<p style="font-size:12px;color:#888;margin:8px 0 0;">${notes.map(n => `• ${n}`).join('<br>')}</p>`
+      : ''
+
+    const estimateSection = `
+      ${section('Estimativa de Custos (Uso Interno)')}
+      <tr><td colspan="2" style="padding:8px 0 0;">
+        <table style="width:100%;border-collapse:collapse;">
+          ${estimateRows}
+          <tr>
+            <td style="padding:10px 0 4px;font-size:13px;font-weight:bold;color:#555b37;border-top:2px solid #555b37;">TOTAL ESTIMADO (excl. IVA)</td>
+            <td style="padding:10px 0 4px;font-size:15px;font-weight:bold;color:#555b37;text-align:right;border-top:2px solid #555b37;">€${subtotal.toFixed(2)}</td>
+          </tr>
+        </table>
+        ${notesHtml}
+      </td></tr>`
 
     // ── Jessica's email body ─────────────────────────────────────────────────
     const htmlBody = `
@@ -123,6 +174,7 @@ export async function onRequestPost(context) {
 
             ${section('6. Serviços Pretendidos')}
             ${row('Tipo de serviço', serviceLabels[serviceType] || serviceType)}
+            ${row('Arquiteto paisagista anterior', yn(hiredArchitect))}
 
             ${section('7. Calendário e Visita')}
             ${row('Época de instalação', installation)}
@@ -137,6 +189,8 @@ export async function onRequestPost(context) {
 
             ${section('9. Observações Adicionais')}
             ${row('Observações', observations)}
+
+            ${estimateSection}
           </table>
           ${attachmentNote}
         </div>
@@ -178,7 +232,7 @@ export async function onRequestPost(context) {
         subject: `[Visita] Pedido de agendamento — ${fullName}`,
         html: htmlBody,
         reply_to: email,
-        attachments: allAttachments,
+        attachments: jessicaAttachments,
       }),
     })
 
@@ -198,7 +252,7 @@ export async function onRequestPost(context) {
           to: [email],
           subject: 'O seu pedido de visita foi enviado — Jessica da Horta Garden Design',
           html: confirmHtml,
-          attachments: pdfAttachment,
+          attachments: clientPdfAttachment,
         }),
       })
     }
