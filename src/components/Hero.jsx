@@ -7,12 +7,25 @@ export default function Hero({ onScheduleClick }) {
 
   return (
     <section id="home" className="hero">
-      {/* Background image */}
-      <div className="hero__bg-wrap">
-        <div className="hero__bg-desktop" style={{ backgroundImage: `url(${desktopBg})` }} />
-        <div className="hero__bg-mobile" />
+      {/* Background video */}
+      <div className="hero__video-wrap">
+        <video
+          className="hero__video"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+        >
+          <source src="/hero.webm" type="video/webm" />
+          <source src="/hero2.mp4" type="video/mp4" />
+        </video>
         <div className="hero__overlay" />
       </div>
+
+      {/* Photoshop frame overlay */}
+      <div className="hero__frame hero__frame--desktop" style={{ backgroundImage: `url(${desktopBg})` }} />
+      <div className="hero__frame hero__frame--mobile" />
 
       {/* Content */}
       <div className="hero__content">
@@ -52,25 +65,16 @@ export default function Hero({ onScheduleClick }) {
           justify-content: center;
           overflow: hidden;
         }
-        .hero__bg-wrap {
+        .hero__video-wrap {
           position: absolute;
           inset: 0;
           z-index: 0;
         }
-        .hero__bg-desktop,
-        .hero__bg-mobile {
-          position: absolute;
-          inset: 0;
-          background-size: cover;
-          background-position: center;
-        }
-        .hero__bg-mobile {
-          background-image: url('/fondo3.webp');
-          display: none;
-        }
-        @media (max-width: 768px) {
-          .hero__bg-desktop { display: none; }
-          .hero__bg-mobile { display: block; }
+        .hero__video {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
         }
         .hero__overlay {
           position: absolute;
@@ -84,7 +88,7 @@ export default function Hero({ onScheduleClick }) {
         }
         .hero__content {
           position: relative;
-          z-index: 1;
+          z-index: 2;
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -118,7 +122,7 @@ export default function Hero({ onScheduleClick }) {
           bottom: 2.5rem;
           left: 50%;
           transform: translateX(-50%);
-          z-index: 1;
+          z-index: 2;
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -133,6 +137,22 @@ export default function Hero({ onScheduleClick }) {
         @keyframes scrollPulse {
           0%, 100% { opacity: 0.4; transform: scaleY(1); }
           50% { opacity: 1; transform: scaleY(1.1); }
+        }
+        .hero__frame {
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+          background-size: cover;
+          background-position: center;
+          pointer-events: none;
+        }
+        .hero__frame--mobile {
+          background-image: url('/fondo3.webp');
+          display: none;
+        }
+        @media (max-width: 768px) {
+          .hero__frame--desktop { display: none; }
+          .hero__frame--mobile { display: block; }
         }
       `}</style>
     </section>
