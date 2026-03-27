@@ -4,5 +4,5 @@ compatibility_date = "2024-11-01"
 account_id = "08ab16b3d302d2e0bb34440c012943b9"
 
 [vars]
-RESEND_API_KEY = "re_CwKRV8ZW_GK4GEqLnRWEJW27Mz45weiyJ"
 JESSICA_EMAIL = "contact@jessicadahorta.com"
+# RESEND_API_KEY is set via Cloudflare Pages dashboard as a Secret

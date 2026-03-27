@@ -11,6 +11,11 @@ export async function onRequestPost(context) {
     const RESEND_API_KEY = env.RESEND_API_KEY
     const JESSICA_EMAIL = env.JESSICA_EMAIL || 'jessicadhg.pais.agem@gmail.com'
 
+    if (!RESEND_API_KEY) {
+      console.error('Schedule function: RESEND_API_KEY is not set in environment')
+      return new Response(JSON.stringify({ error: 'Server configuration error' }), { status: 500 })
+    }
+
     const {
       fullName, phone, email, address, postalCode,
       totalArea, interventionArea, limits, topo, topoFormat, constructions, constructionsDesc,
@@ -181,8 +186,8 @@ export async function onRequestPost(context) {
 
     if (!toJessicaRes.ok) {
       const err = await toJessicaRes.text()
-      console.error('Resend error (Jessica):', err)
-      return new Response(JSON.stringify({ error: 'Email send failed' }), { status: 500 })
+      console.error(`Resend error (Jessica) — status ${toJessicaRes.status}:`, err)
+      return new Response(JSON.stringify({ error: 'Email send failed', detail: err }), { status: 500 })
     }
 
     // ── Send confirmation to client ───────────────────────────────────────────

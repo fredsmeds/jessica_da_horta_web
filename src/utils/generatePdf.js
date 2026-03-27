@@ -4,19 +4,28 @@ const JESSICA_LAT = 38.71605105146495
 const JESSICA_LNG = -9.415024799281479
 
 // Convert any image src (URL or base64 dataURL) to PNG dataURL via canvas
+// Always resolves (never rejects) — returns null on any failure
 function toCanvasPng(src) {
   return new Promise(resolve => {
-    const img = new Image()
-    img.crossOrigin = 'anonymous'
-    img.onload = () => {
-      const c = document.createElement('canvas')
-      c.width = img.naturalWidth
-      c.height = img.naturalHeight
-      c.getContext('2d').drawImage(img, 0, 0)
-      resolve(c.toDataURL('image/png'))
+    try {
+      const img = new Image()
+      img.crossOrigin = 'anonymous'
+      img.onload = () => {
+        try {
+          const c = document.createElement('canvas')
+          c.width = img.naturalWidth
+          c.height = img.naturalHeight
+          c.getContext('2d').drawImage(img, 0, 0)
+          resolve(c.toDataURL('image/png'))
+        } catch {
+          resolve(null)
+        }
+      }
+      img.onerror = () => resolve(null)
+      img.src = src
+    } catch {
+      resolve(null)
     }
-    img.onerror = () => resolve(null)
-    img.src = src
   })
 }
 
@@ -40,8 +49,18 @@ export async function generatePdf(data) {
   const CW = W - 2 * M
   let y = 0
 
-  // Load logo
-  const logo = await toCanvasPng('/isotipo_white.webp')
+  // Load logo — use absolute URL and impose a 3-second timeout so a
+  // failed image load never blocks or crashes the PDF generation
+  let logo = null
+  try {
+    const logoUrl = (typeof window !== 'undefined' ? window.location.origin : '') + '/isotipo_white.webp'
+    logo = await Promise.race([
+      toCanvasPng(logoUrl),
+      new Promise(r => setTimeout(() => r(null), 3000)),
+    ])
+  } catch {
+    logo = null
+  }
 
   // ── Header ──────────────────────────────────────────────
   doc.setFillColor(85, 91, 55)

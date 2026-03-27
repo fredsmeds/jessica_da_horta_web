@@ -617,9 +617,19 @@ export default function ScheduleVisit() {
     e.preventDefault()
     if (!data.privacy) return
     setStatus('loading')
-    try {
-      const pdfBase64 = await generatePdf(data)
 
+    // Step 1: Generate PDF — if this fails, show error without calling /api/schedule
+    let pdfBase64
+    try {
+      pdfBase64 = await generatePdf(data)
+    } catch (pdfErr) {
+      console.error('PDF generation error:', pdfErr)
+      setStatus('pdfError')
+      return
+    }
+
+    // Step 2: Build attachments list and POST to /api/schedule
+    try {
       const attachments = [
         ...(data.topoFile ? [{ name: data.topoFile.name, data: data.topoFile.data, type: data.topoFile.type }] : []),
         ...(data.constructionImages || []).map(f => ({ name: f.name, data: f.data, type: f.type })),
@@ -632,9 +642,14 @@ export default function ScheduleVisit() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...data, pdfBase64, attachments }),
       })
-      if (!res.ok) throw new Error()
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        console.error('Schedule API error:', res.status, body)
+        throw new Error(`API ${res.status}`)
+      }
       setStatus('success')
-    } catch {
+    } catch (sendErr) {
+      console.error('Form send error:', sendErr)
       setStatus('error')
     }
   }
@@ -686,6 +701,7 @@ export default function ScheduleVisit() {
             </div>
 
             {status === 'error' && <div className="alert alert-error">{s.errorText}</div>}
+            {status === 'pdfError' && <div className="alert alert-error">Ocorreu um erro ao gerar o documento PDF. Por favor tente novamente.</div>}
 
             <form onSubmit={step === TOTAL_STEPS ? handleSubmit : e => { e.preventDefault(); handleNext() }}>
               {step === 1 && <Step1 data={data} set={set} t={t} />}

@@ -4,5 +4,9 @@ compatibility_date = "2024-11-01"
 pages_build_output_dir = "dist"
 
 [vars]
-RESEND_API_KEY = "re_CwKRV8ZW_GK4GEqLnRWEJW27Mz45weiyJ"
+# Non-sensitive config
 JESSICA_EMAIL = "contact@jessicadahorta.com"
+
+# RESEND_API_KEY must be set as a Cloudflare Pages Secret:
+# Dashboard → Pages → jessicadhg-pais-agem → Settings → Environment variables
+# Add as a "Secret" (encrypted): RESEND_API_KEY = re_CwKRV8ZW_...

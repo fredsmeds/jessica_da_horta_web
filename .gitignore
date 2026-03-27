@@ -7,7 +7,7 @@ dist/
 # Large files (>25MB)
 docs/Portfolio/Portfolio 3D-A3JessicaDHG_issuu.pdf
 
-# Local env
+# Local env & secrets (never commit these)
 .env
 .env.local
 .dev.vars
