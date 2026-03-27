@@ -165,6 +165,7 @@ const en = {
     phoneLabel: 'Contact telephone (with country prefix)',
     emailLabel: 'Email address',
     addressLabel: 'Address of the place of intervention',
+    postalCodeLabel: 'Postal code',
 
     s2title: 'Location Details',
     s2desc: 'Approximate dimensions of the area to be worked on, limits and other specifics.',

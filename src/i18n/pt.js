@@ -175,6 +175,7 @@ const pt = {
     phoneLabel: 'Telefone (com indicativo de país)',
     emailLabel: 'Email',
     addressLabel: 'Morada do local de intervenção',
+    postalCodeLabel: 'Código postal',
 
     // Step 2
     s2title: 'Detalhes da Localização',

@@ -94,6 +94,10 @@ function Step1({ data, set, t }) {
         <label className="form-label">{s.addressLabel} <span className="required">*</span></label>
         <input className="form-input" type="text" required value={data.address} onChange={e => set('address', e.target.value)} />
       </div>
+      <div className="form-group" style={{maxWidth:'220px'}}>
+        <label className="form-label">{s.postalCodeLabel} <span className="required">*</span></label>
+        <input className="form-input" type="text" required placeholder="0000-000" value={data.postalCode} onChange={e => set('postalCode', e.target.value)} />
+      </div>
     </>
   )
 }
@@ -335,7 +339,7 @@ function PrivacyModal({ t, onClose }) {
 
 const initialData = {
   // Step 1
-  fullName: '', phone: '', email: '', address: '',
+  fullName: '', phone: '', email: '', address: '', postalCode: '',
   // Step 2
   totalArea: '', interventionArea: '', limits: '',
   topo: '', topoFormat: '', constructions: '', constructionsDesc: '',
