@@ -268,6 +268,35 @@ const en = {
     s9desc: 'Use this space to share any other relevant information not covered in the previous sections.',
     observationsLabel: 'Relevant information or special considerations:',
 
+    // Uploads
+    uploadBtn: 'Select file',
+    uploadBtnMulti: 'Select files',
+    uploadMaxSize: 'Max. 25MB per file.',
+    uploadSizeError: 'exceeds the 25MB limit and was not added.',
+    topoFileLabel: 'Upload topographic survey file',
+    constructionImagesLabel: 'Photos of existing constructions (optional)',
+    rainwaterImageLabel: 'Photo of the rainwater collection deposit',
+    interventionImagesLabel: 'Photos of the intervention area (optional)',
+
+    // Disclaimer / travel fee
+    disclaimerTitle: 'Travel Fee',
+    disclaimerText: 'Base fee: €45. Travel beyond a 50 km radius carries an additional charge of €0.40/km.',
+    disclaimerCalc: 'Calculating distance...',
+    disclaimerDist: 'Estimated distance: {km} km',
+    disclaimerWithin: 'Within 50 km radius — no additional travel cost.',
+    disclaimerExtra: 'Estimated additional travel cost: €{fee} (+{km} km × €0.40)',
+    disclaimerError: 'Distance could not be calculated automatically.',
+
+    // Preferred visit date/time (Step 9)
+    preferredDateLabel: 'Preferred visit date',
+    preferredTimeLabel: 'Time preference',
+    timeOptions: {
+      morning: 'Morning (9am–1pm)',
+      afternoon: 'Afternoon (2pm–6pm)',
+      flexible: 'Flexible',
+    },
+    visitNote: 'Subject to confirmation by Jessica da Horta.',
+
     privacyText: 'I have read and accept the',
     privacyLink: 'Privacy Policy',
   },

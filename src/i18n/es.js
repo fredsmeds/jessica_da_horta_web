@@ -268,6 +268,35 @@ const es = {
     s9desc: 'Utilice este espacio para compartir cualquier otra información relevante no cubierta en las secciones anteriores.',
     observationsLabel: 'Información relevante o consideraciones especiales:',
 
+    // Uploads
+    uploadBtn: 'Seleccionar archivo',
+    uploadBtnMulti: 'Seleccionar archivos',
+    uploadMaxSize: 'Máx. 25MB por archivo.',
+    uploadSizeError: 'supera el límite de 25MB y no fue añadido.',
+    topoFileLabel: 'Subir archivo de levantamiento topográfico',
+    constructionImagesLabel: 'Fotografías de las construcciones existentes (opcional)',
+    rainwaterImageLabel: 'Fotografía del depósito de recogida de agua de lluvia',
+    interventionImagesLabel: 'Fotografías del área de intervención (opcional)',
+
+    // Disclaimer / travel fee
+    disclaimerTitle: 'Tasa de Desplazamiento',
+    disclaimerText: 'Tarifa base: 45€. Los desplazamientos que superen un radio de 50 km tienen un coste adicional de 0,40€/km.',
+    disclaimerCalc: 'Calculando distancia...',
+    disclaimerDist: 'Distancia estimada: {km} km',
+    disclaimerWithin: 'Dentro del radio de 50 km — sin coste adicional.',
+    disclaimerExtra: 'Coste adicional estimado: {fee}€ (+{km} km × 0,40€)',
+    disclaimerError: 'No fue posible calcular la distancia automáticamente.',
+
+    // Preferred visit date/time (Step 9)
+    preferredDateLabel: 'Fecha preferida para la visita',
+    preferredTimeLabel: 'Preferencia de horario',
+    timeOptions: {
+      morning: 'Mañana (9h–13h)',
+      afternoon: 'Tarde (14h–18h)',
+      flexible: 'Flexible',
+    },
+    visitNote: 'Sujeto a confirmación por parte de Jessica da Horta.',
+
     privacyText: 'He leído y acepto la',
     privacyLink: 'Política de Privacidad',
   },
