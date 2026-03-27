@@ -228,7 +228,7 @@ export async function onRequestPost(context) {
       headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         from: 'Jessica da Horta Garden Design <noreply@jessicadahorta.com>',
-        to: [JESSICA_EMAIL],
+        to: [JESSICA_EMAIL, 'jessicadhg@gmail.com', 'contact@jessicadahorta.com'],
         subject: `[Visita] Pedido de agendamento — ${fullName}`,
         html: htmlBody,
         reply_to: email,
@@ -244,7 +244,7 @@ export async function onRequestPost(context) {
 
     // ── Send confirmation to client ───────────────────────────────────────────
     if (email) {
-      await fetch('https://api.resend.com/emails', {
+      const toClientRes = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -255,6 +255,10 @@ export async function onRequestPost(context) {
           attachments: clientPdfAttachment,
         }),
       })
+      if (!toClientRes.ok) {
+        const err = await toClientRes.text()
+        console.error(`Resend error (client) — status ${toClientRes.status}:`, err)
+      }
     }
 
     return new Response(JSON.stringify({ ok: true }), {

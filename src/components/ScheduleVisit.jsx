@@ -198,26 +198,26 @@ function Step1({ data, set, t, stepError }) {
     <>
       <p className="sv-step-desc">{s.s1desc}</p>
       <div className="form-group">
-        <label className="form-label">{s.fullNameLabel} <span className="required">*</span></label>
-        <input className="form-input" type="text" required value={data.fullName} onChange={e => set('fullName', e.target.value)} />
+        <label className="form-label" htmlFor="sv-fullName">{s.fullNameLabel} <span className="required">*</span></label>
+        <input id="sv-fullName" name="fullName" className="form-input" type="text" required value={data.fullName} onChange={e => set('fullName', e.target.value)} />
       </div>
       <div className="form-row">
         <div className="form-group">
-          <label className="form-label">{s.phoneLabel} <span className="required">*</span></label>
-          <input className="form-input" type="tel" required value={data.phone} onChange={e => set('phone', e.target.value)} />
+          <label className="form-label" htmlFor="sv-phone">{s.phoneLabel} <span className="required">*</span></label>
+          <input id="sv-phone" name="phone" className="form-input" type="tel" required value={data.phone} onChange={e => set('phone', e.target.value)} />
         </div>
         <div className="form-group">
-          <label className="form-label">{s.emailLabel} <span className="required">*</span></label>
-          <input className="form-input" type="email" required value={data.email} onChange={e => set('email', e.target.value)} />
+          <label className="form-label" htmlFor="sv-email">{s.emailLabel} <span className="required">*</span></label>
+          <input id="sv-email" name="email" className="form-input" type="email" required value={data.email} onChange={e => set('email', e.target.value)} />
         </div>
       </div>
       <div className="form-group">
-        <label className="form-label">{s.addressLabel} <span className="required">*</span></label>
-        <input className="form-input" type="text" required value={data.address} onChange={e => set('address', e.target.value)} />
+        <label className="form-label" htmlFor="sv-address">{s.addressLabel} <span className="required">*</span></label>
+        <input id="sv-address" name="address" className="form-input" type="text" required value={data.address} onChange={e => set('address', e.target.value)} />
       </div>
       <div className="form-group" style={{ maxWidth: '220px' }}>
-        <label className="form-label">{s.postalCodeLabel} <span className="required">*</span></label>
-        <input className="form-input" type="text" required placeholder="0000-000" value={data.postalCode} onChange={e => set('postalCode', e.target.value)} />
+        <label className="form-label" htmlFor="sv-postalCode">{s.postalCodeLabel} <span className="required">*</span></label>
+        <input id="sv-postalCode" name="postalCode" className="form-input" type="text" required placeholder="0000-000" value={data.postalCode} onChange={e => set('postalCode', e.target.value)} />
         {stepError && <p className="file-upload__error" style={{ marginTop: '0.35rem' }}>{stepError}</p>}
       </div>
 
@@ -254,18 +254,18 @@ function Step2({ data, set, t }) {
       <p className="sv-step-desc">{s.s2desc}</p>
       <div className="form-row">
         <div className="form-group">
-          <label className="form-label">{s.totalAreaLabel} <span className="required">*</span></label>
-          <input className="form-input" type="number" min="0" required value={data.totalArea} onChange={e => set('totalArea', e.target.value)} />
+          <label className="form-label" htmlFor="sv-totalArea">{s.totalAreaLabel} <span className="required">*</span></label>
+          <input id="sv-totalArea" name="totalArea" className="form-input" type="number" min="0" required value={data.totalArea} onChange={e => set('totalArea', e.target.value)} />
         </div>
         <div className="form-group">
-          <label className="form-label">{s.interventionAreaLabel} <span className="required">*</span></label>
-          <input className="form-input" type="number" min="0" required value={data.interventionArea} onChange={e => set('interventionArea', e.target.value)} />
+          <label className="form-label" htmlFor="sv-interventionArea">{s.interventionAreaLabel} <span className="required">*</span></label>
+          <input id="sv-interventionArea" name="interventionArea" className="form-input" type="number" min="0" required value={data.interventionArea} onChange={e => set('interventionArea', e.target.value)} />
         </div>
       </div>
       <div className="form-group">
-        <label className="form-label">{s.limitsLabel} <span className="required">*</span></label>
+        <label className="form-label" htmlFor="sv-limits">{s.limitsLabel} <span className="required">*</span></label>
         <p className="form-hint" style={{ marginBottom: '0.5rem' }}>{s.limitsDesc}</p>
-        <textarea className="form-textarea" required value={data.limits} onChange={e => set('limits', e.target.value)} />
+        <textarea id="sv-limits" name="limits" className="form-textarea" required value={data.limits} onChange={e => set('limits', e.target.value)} />
       </div>
       <div className="form-group">
         <label className="form-label">{s.topoLabel} <span className="required">*</span></label>
@@ -296,8 +296,8 @@ function Step2({ data, set, t }) {
       {data.constructions === 'yes' && (
         <>
           <div className="form-group">
-            <label className="form-label">{s.constructionsDescLabel}</label>
-            <textarea className="form-textarea" value={data.constructionsDesc} onChange={e => set('constructionsDesc', e.target.value)} />
+            <label className="form-label" htmlFor="sv-constructionsDesc">{s.constructionsDescLabel}</label>
+            <textarea id="sv-constructionsDesc" name="constructionsDesc" className="form-textarea" value={data.constructionsDesc} onChange={e => set('constructionsDesc', e.target.value)} />
           </div>
           <div className="form-group">
             <label className="form-label">{s.constructionImagesLabel}</label>
@@ -338,8 +338,8 @@ function Step3({ data, set, t }) {
       </div>
       {(data.waterSources.includes('rainwater') || data.waterSources.includes('tank')) && (
         <div className="form-group">
-          <label className="form-label">{s.waterStorageLabel}</label>
-          <input className="form-input" type="text" value={data.waterStorage} onChange={e => set('waterStorage', e.target.value)} />
+          <label className="form-label" htmlFor="sv-waterStorage">{s.waterStorageLabel}</label>
+          <input id="sv-waterStorage" name="waterStorage" className="form-input" type="text" value={data.waterStorage} onChange={e => set('waterStorage', e.target.value)} />
         </div>
       )}
       {data.waterSources.includes('rainwater') && (
@@ -373,8 +373,8 @@ function Step4({ data, set, t }) {
       {data.hasPets === 'yes' && (
         <>
           <div className="form-group">
-            <label className="form-label">{s.petsDescLabel}</label>
-            <textarea className="form-textarea" value={data.petsDesc} onChange={e => set('petsDesc', e.target.value)} />
+            <label className="form-label" htmlFor="sv-petsDesc">{s.petsDescLabel}</label>
+            <textarea id="sv-petsDesc" name="petsDesc" className="form-textarea" value={data.petsDesc} onChange={e => set('petsDesc', e.target.value)} />
           </div>
           <div className="form-group">
             <label className="form-label">{s.petsAccessLabel}</label>
@@ -411,8 +411,8 @@ function Step5({ data, set, t }) {
         <CheckGroup options={plantTypeOptions} values={data.plantTypes} onChange={v => set('plantTypes', v)} />
       </div>
       <div className="form-group">
-        <label className="form-label">{s.colorsLabel} <span className="required">*</span></label>
-        <input className="form-input" type="text" value={data.colors} onChange={e => set('colors', e.target.value)} />
+        <label className="form-label" htmlFor="sv-colors">{s.colorsLabel} <span className="required">*</span></label>
+        <input id="sv-colors" name="colors" className="form-input" type="text" value={data.colors} onChange={e => set('colors', e.target.value)} />
       </div>
       <div className="form-group">
         <label className="form-label">{s.desiredElementsLabel} <span className="required">*</span></label>
@@ -456,12 +456,12 @@ function Step7({ data, set, t }) {
         <RadioGroup name="installation" options={seasonOptions} value={data.installation} onChange={v => set('installation', v)} />
       </div>
       <div className="form-group">
-        <label className="form-label">{s.prioritiesLabel} <span className="required">*</span></label>
-        <input className="form-input" type="text" value={data.priorities} onChange={e => set('priorities', e.target.value)} />
+        <label className="form-label" htmlFor="sv-priorities">{s.prioritiesLabel} <span className="required">*</span></label>
+        <input id="sv-priorities" name="priorities" className="form-input" type="text" value={data.priorities} onChange={e => set('priorities', e.target.value)} />
       </div>
       <div className="form-group">
-        <label className="form-label">{s.additionalDescLabel}</label>
-        <textarea className="form-textarea" value={data.additionalDesc} onChange={e => set('additionalDesc', e.target.value)} />
+        <label className="form-label" htmlFor="sv-additionalDesc">{s.additionalDescLabel}</label>
+        <textarea id="sv-additionalDesc" name="additionalDesc" className="form-textarea" value={data.additionalDesc} onChange={e => set('additionalDesc', e.target.value)} />
       </div>
     </>
   )
@@ -480,8 +480,8 @@ function Step8({ data, set, t }) {
       </div>
       {data.maintenanceTeam === 'yes' && (
         <div className="form-group">
-          <label className="form-label">{s.maintenanceDetailsLabel}</label>
-          <textarea className="form-textarea" value={data.maintenanceDetails} onChange={e => set('maintenanceDetails', e.target.value)} />
+          <label className="form-label" htmlFor="sv-maintenanceDetails">{s.maintenanceDetailsLabel}</label>
+          <textarea id="sv-maintenanceDetails" name="maintenanceDetails" className="form-textarea" value={data.maintenanceDetails} onChange={e => set('maintenanceDetails', e.target.value)} />
         </div>
       )}
     </>
@@ -503,8 +503,10 @@ function Step9({ data, set, t, onPrivacyClick }) {
 
       {/* Preferred visit date & time */}
       <div className="form-group">
-        <label className="form-label">{s.preferredDateLabel}</label>
+        <label className="form-label" htmlFor="sv-preferredDate">{s.preferredDateLabel}</label>
         <input
+          id="sv-preferredDate"
+          name="preferredDate"
           className="form-input"
           type="date"
           min={minDate}
@@ -521,8 +523,8 @@ function Step9({ data, set, t, onPrivacyClick }) {
 
       {/* Observations */}
       <div className="form-group">
-        <label className="form-label">{s.observationsLabel}</label>
-        <textarea className="form-textarea" style={{ minHeight: '120px' }} value={data.observations} onChange={e => set('observations', e.target.value)} />
+        <label className="form-label" htmlFor="sv-observations">{s.observationsLabel}</label>
+        <textarea id="sv-observations" name="observations" className="form-textarea" style={{ minHeight: '120px' }} value={data.observations} onChange={e => set('observations', e.target.value)} />
       </div>
 
       {/* Intervention area photos */}

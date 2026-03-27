@@ -1,23 +1,16 @@
+import { useMemo } from 'react'
 import { useLanguage } from '../i18n/index.jsx'
 
 export default function Hero({ onScheduleClick }) {
   const { t } = useLanguage()
+  const desktopBg = useMemo(() => Math.random() < 0.5 ? '/fondo1.webp' : '/fondo2.webp', [])
 
   return (
     <section id="home" className="hero">
-      {/* Background video */}
-      <div className="hero__video-wrap">
-        <video
-          className="hero__video"
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="auto"
-        >
-          <source src="/hero.webm" type="video/webm" />
-          <source src="/hero2.mp4" type="video/mp4" />
-        </video>
+      {/* Background image */}
+      <div className="hero__bg-wrap">
+        <div className="hero__bg-desktop" style={{ backgroundImage: `url(${desktopBg})` }} />
+        <div className="hero__bg-mobile" />
         <div className="hero__overlay" />
       </div>
 
@@ -59,16 +52,25 @@ export default function Hero({ onScheduleClick }) {
           justify-content: center;
           overflow: hidden;
         }
-        .hero__video-wrap {
+        .hero__bg-wrap {
           position: absolute;
           inset: 0;
           z-index: 0;
         }
-        .hero__video {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          object-position: center;
+        .hero__bg-desktop,
+        .hero__bg-mobile {
+          position: absolute;
+          inset: 0;
+          background-size: cover;
+          background-position: center;
+        }
+        .hero__bg-mobile {
+          background-image: url('/fondo3.webp');
+          display: none;
+        }
+        @media (max-width: 768px) {
+          .hero__bg-desktop { display: none; }
+          .hero__bg-mobile { display: block; }
         }
         .hero__overlay {
           position: absolute;
