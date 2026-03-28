@@ -742,20 +742,19 @@ export default function ScheduleVisit() {
 
 const svStyles = `
   .sv { background: var(--color-white); position: relative; overflow: hidden; }
-  .sv .container { position: relative; z-index: 1; }
+  .sv .container { position: relative; z-index: 1; background: rgba(255, 255, 255, 0.30); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); }
   .sv__fondo {
     position: absolute;
     inset: 0;
     background-image: url('/fondo1.webp');
-    background-size: cover;
-    background-position: center;
+    background-size: 100% auto;
+    background-position: top center;
+    background-repeat: no-repeat;
     pointer-events: none;
   }
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     .sv__fondo {
       background-image: url('/fondo3.webp');
-      background-size: 100% 100%;
-      background-position: top center;
     }
   }
   .sv__intro { max-width: 680px; margin-top: 0.5rem; font-size: 0.95rem; }
@@ -801,7 +800,7 @@ const svStyles = `
     font-size: 0.72rem; font-weight: var(--weight-medium); letter-spacing: 0.12em;
     text-transform: uppercase; color: var(--color-primary); display: block; margin-bottom: 0.4rem;
   }
-  .sv__step-title { font-size: 1.3rem; font-weight: var(--weight-light); }
+  .sv__step-title { font-size: 1.05rem; font-weight: var(--weight-light); }
   .sv-step-desc { font-size: 0.9rem; color: var(--color-text-secondary); margin-bottom: 1.5rem; line-height: 1.7; }
   .sv__nav {
     display: flex; align-items: center; gap: 1rem;

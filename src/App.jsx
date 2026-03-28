@@ -85,8 +85,11 @@ export default function App() {
       <main>
         <Hero onScheduleClick={() => scrollToSection('schedule')} />
         <About />
-        <Projects />
-        <FAQ />
+        <div className="fondo4-band">
+          <div className="fondo4-band__bg" />
+          <Projects />
+          <FAQ />
+        </div>
         <Contact onScheduleClick={() => scrollToSection('schedule')} />
         <ScheduleVisit />
       </main>
@@ -99,6 +102,30 @@ export default function App() {
       {showPrivacy && <PrivacyModal onClose={() => setShowPrivacy(false)} />}
 
       <style>{`
+        .fondo4-band {
+          position: relative;
+          overflow: hidden;
+        }
+        .fondo4-band__bg {
+          position: absolute;
+          inset: 0;
+          background-image: url('/fondo4.webp');
+          background-size: 100% auto;
+          background-position: top center;
+          background-repeat: no-repeat;
+          pointer-events: none;
+          z-index: 0;
+        }
+        .fondo4-band .container {
+          position: relative;
+          z-index: 1;
+          background: rgba(255, 255, 255, 0.30);
+          backdrop-filter: blur(2px);
+          -webkit-backdrop-filter: blur(2px);
+        }
+        .projects { background: transparent !important; }
+        .faq { background: transparent !important; }
+
         .modal-overlay {
           position: fixed;
           inset: 0;
