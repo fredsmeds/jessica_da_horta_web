@@ -15,9 +15,11 @@ export default function Projects() {
   return (
     <section id="projects" className="projects section">
       <div className="container">
-        <p className="section-label">{t.projects.sectionLabel}</p>
-        <h2 className="section-title">{t.projects.title}</h2>
-        <p className="projects__intro">{t.projects.intro}</p>
+        <div className="projects__header">
+          <p className="section-label">{t.projects.sectionLabel}</p>
+          <h2 className="section-title">{t.projects.title}</h2>
+          <p className="projects__intro">{t.projects.intro}</p>
+        </div>
 
         <hr className="divider" />
 
@@ -46,6 +48,11 @@ export default function Projects() {
       </div>
 
       <style>{`
+        .projects__header {
+          background: rgba(255, 255, 255, 0.30);
+          padding: 1.5rem;
+          display: inline-block;
+        }
         .projects__intro {
           max-width: 600px;
           font-size: 1rem;

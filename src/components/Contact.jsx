@@ -332,6 +332,8 @@ export default function Contact({ onScheduleClick }) {
         .contact__header-col {
           position: sticky;
           top: calc(var(--nav-height) + 2rem);
+          background: rgba(255, 255, 255, 0.30);
+          padding: 1.5rem;
         }
         .contact__intro {
           margin-top: 0.75rem;

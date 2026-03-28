@@ -217,7 +217,8 @@ export default function About() {
         }
         .about__mission-box {
           border-left: 3px solid var(--color-primary);
-          padding-left: 1.25rem;
+          padding: 1rem 1.25rem;
+          background: rgba(255, 255, 255, 0.30);
         }
         .about__mission-label {
           font-size: 0.72rem;

@@ -41,8 +41,10 @@ export default function FAQ() {
       <div className="container">
         <div className="faq__layout">
           <div className="faq__header-col">
-            <p className="section-label">{t.faq.sectionLabel}</p>
-            <h2 className="section-title">{t.faq.title}</h2>
+            <div className="faq__header-text">
+              <p className="section-label">{t.faq.sectionLabel}</p>
+              <h2 className="section-title">{t.faq.title}</h2>
+            </div>
             <div className="faq__deco">
               <img src="/leaves_eyes3.webp" alt="" className="faq__deco-img" aria-hidden="true" />
             </div>
@@ -77,8 +79,13 @@ export default function FAQ() {
           position: sticky;
           top: calc(var(--nav-height) + 2rem);
         }
+        .faq__header-text {
+          background: rgba(255, 255, 255, 0.30);
+          padding: 1.5rem;
+          margin-bottom: 2rem;
+        }
         .faq__deco {
-          margin-top: 2rem;
+          margin-top: 0;
           overflow: hidden;
           aspect-ratio: 3/4;
         }
