@@ -38,7 +38,6 @@ export default function FAQ() {
 
   return (
     <section id="faq" className="faq section">
-      <img src="/plant4.webp" alt="" aria-hidden="true" className="faq__plant" />
       <div className="container">
         <div className="faq__layout">
           <div className="faq__header-col">
@@ -50,6 +49,8 @@ export default function FAQ() {
               <img src="/leaves_eyes3.webp" alt="" className="faq__deco-img" aria-hidden="true" />
             </div>
           </div>
+
+          <img src="/plant4.webp" alt="" aria-hidden="true" className="faq__plant" />
 
           <div className="faq__list-col">
             <div className="faq__list">
@@ -69,10 +70,8 @@ export default function FAQ() {
       <style>{`
         .faq {
           background: transparent;
-          position: relative;
-          overflow: hidden;
         }
-        .faq__plant { display: none; position: absolute; pointer-events: none; opacity: 0.82; z-index: 0; }
+        .faq__plant { display: none; pointer-events: none; opacity: 0.88; }
         .faq__layout {
           display: grid;
           grid-template-columns: 300px 1fr;
@@ -178,10 +177,11 @@ export default function FAQ() {
           }
           .faq__plant {
             display: block;
-            width: 250px;
-            top: 50%;
-            right: -15px;
-            transform: translateY(-50%) rotate(-9deg);
+            width: 100%;
+            max-height: 120px;
+            object-fit: cover;
+            object-position: center;
+            margin: 1.5rem 0;
           }
         }
       `}</style>

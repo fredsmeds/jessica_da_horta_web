@@ -668,14 +668,13 @@ export default function ScheduleVisit() {
   return (
     <section id="schedule" className="sv section">
       <div className="sv__fondo" />
-      <img src="/plant6.webp" alt="" aria-hidden="true" className="sv__plant sv__plant--6" />
-      <img src="/plant7.webp" alt="" aria-hidden="true" className="sv__plant sv__plant--7" />
       <div className="container">
         <div className="sv__header">
           <p className="section-label">{s.sectionLabel}</p>
           <h2 className="section-title">{s.title}</h2>
           <p className="sv__intro">{s.intro}</p>
         </div>
+        <img src="/plant6.webp" alt="" aria-hidden="true" className="sv__plant sv__plant--6" />
         <div className="sv__note">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
@@ -687,6 +686,8 @@ export default function ScheduleVisit() {
           <div className="sv__sidebar">
             <StepIndicator current={step} total={TOTAL_STEPS} steps={s.steps} />
           </div>
+
+          <img src="/plant7.webp" alt="" aria-hidden="true" className="sv__plant sv__plant--7" />
 
           <div className="sv__form-area">
             <div className="sv__form-header">

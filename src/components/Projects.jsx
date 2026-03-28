@@ -14,7 +14,6 @@ export default function Projects() {
 
   return (
     <section id="projects" className="projects section">
-      <img src="/plant3.webp" alt="" aria-hidden="true" className="projects__plant" />
       <div className="container">
         <div className="projects__header">
           <p className="section-label">{t.projects.sectionLabel}</p>
@@ -22,7 +21,7 @@ export default function Projects() {
           <p className="projects__intro">{t.projects.intro}</p>
         </div>
 
-        <hr className="divider" />
+        <img src="/plant3.webp" alt="" aria-hidden="true" className="projects__plant" />
 
         <div className="projects__grid">
           {placeholderProjects.map(project => (
@@ -54,7 +53,6 @@ export default function Projects() {
           padding: 1.5rem;
           display: inline-block;
         }
-        .projects { position: relative; overflow: hidden; }
         .projects__intro {
           max-width: 600px;
           font-size: 1rem;
@@ -126,7 +124,7 @@ export default function Projects() {
           align-items: center;
         }
 
-        .projects__plant { display: none; position: absolute; pointer-events: none; opacity: 0.82; z-index: 0; }
+        .projects__plant { display: none; pointer-events: none; opacity: 0.88; }
 
         @media (max-width: 900px) {
           .projects__grid {
@@ -134,16 +132,20 @@ export default function Projects() {
           }
         }
 
+        @media (max-width: 1024px) {
+          .projects__plant {
+            display: block;
+            width: 100%;
+            max-height: 120px;
+            object-fit: cover;
+            object-position: center;
+            margin: 1.5rem 0;
+          }
+        }
+
         @media (max-width: 580px) {
           .projects__grid {
             grid-template-columns: 1fr;
-          }
-          .projects__plant {
-            display: block;
-            width: 240px;
-            top: 50%;
-            left: -15px;
-            transform: translateY(-50%) rotate(8deg);
           }
         }
       `}</style>
