@@ -668,10 +668,14 @@ export default function ScheduleVisit() {
   return (
     <section id="schedule" className="sv section">
       <div className="sv__fondo" />
+      <img src="/plant6.webp" alt="" aria-hidden="true" className="sv__plant sv__plant--6" />
+      <img src="/plant7.webp" alt="" aria-hidden="true" className="sv__plant sv__plant--7" />
       <div className="container">
-        <p className="section-label">{s.sectionLabel}</p>
-        <h2 className="section-title">{s.title}</h2>
-        <p className="sv__intro">{s.intro}</p>
+        <div className="sv__header">
+          <p className="section-label">{s.sectionLabel}</p>
+          <h2 className="section-title">{s.title}</h2>
+          <p className="sv__intro">{s.intro}</p>
+        </div>
         <div className="sv__note">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
@@ -743,6 +747,9 @@ export default function ScheduleVisit() {
 const svStyles = `
   .sv { background: transparent; position: relative; overflow: hidden; }
   .sv .container { position: relative; z-index: 1; }
+  .sv__plant { display: none; position: absolute; pointer-events: none; opacity: 0.82; z-index: 0; }
+  .sv__plant--6 { width: 240px; top: 0; right: -15px; transform: rotate(8deg); }
+  .sv__plant--7 { width: 230px; bottom: 1rem; left: -15px; transform: rotate(-10deg); }
   .sv__fondo {
     position: absolute;
     inset: 0;
@@ -753,10 +760,10 @@ const svStyles = `
     pointer-events: none;
   }
   @media (max-width: 1024px) {
-    .sv__fondo {
-      background-image: url('/fondo3.webp');
-    }
+    .sv__fondo { background-image: none; }
+    .sv__plant { display: block !important; }
   }
+  .sv__header { background: rgba(255, 255, 255, 0.30); padding: 1.5rem; display: inline-block; margin-bottom: var(--spacing-md); }
   .sv__intro { max-width: 680px; margin-top: 0.5rem; font-size: 0.95rem; }
   .sv__note {
     display: flex; align-items: flex-start; gap: 0.6rem;

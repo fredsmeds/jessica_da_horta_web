@@ -24,6 +24,8 @@ export default function About() {
   return (
     <section id="about" className="about section">
       <div className="about__fondo" />
+      <img src="/plant1.webp" alt="" aria-hidden="true" className="about__plant about__plant--1" />
+      <img src="/plant2.webp" alt="" aria-hidden="true" className="about__plant about__plant--2" />
       <div className="container">
 
         {/* Header */}
@@ -184,9 +186,28 @@ export default function About() {
           background-repeat: no-repeat;
           pointer-events: none;
         }
+        .about__plant {
+          display: none;
+          position: absolute;
+          pointer-events: none;
+          opacity: 0.82;
+          z-index: 0;
+        }
         @media (max-width: 1024px) {
-          .about__fondo {
-            background-image: url('/fondo3.webp');
+          .about__fondo { background-image: none; }
+          .about__plant--1 {
+            display: block;
+            width: 240px;
+            top: 0;
+            right: -15px;
+            transform: rotate(10deg);
+          }
+          .about__plant--2 {
+            display: block;
+            width: 260px;
+            bottom: 1rem;
+            right: -15px;
+            transform: rotate(-6deg);
           }
         }
         .about__bio-wrap {

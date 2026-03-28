@@ -18,8 +18,8 @@
   --color-primary-dark: #3e4229;
   --color-white: #ffffff;
   --color-off-white: #f8f7f4;
-  --color-text: #1a1a18;
-  --color-text-secondary: #5a5a52;
+  --color-text: #001c17;
+  --color-text-secondary: #002f27;
   --color-border: #ddddd0;
   --color-border-light: #ebebdf;
 
@@ -66,9 +66,10 @@ body {
 
 @media (max-width: 768px) {
   body {
-    background-attachment: scroll;
-    background-size: 480px auto;
-    background-repeat: repeat;
+    background-image: url('/white_responsive.webp');
+    background-attachment: fixed;
+    background-size: cover;
+    background-repeat: no-repeat;
   }
 }
 

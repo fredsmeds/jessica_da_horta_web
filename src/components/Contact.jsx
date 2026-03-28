@@ -263,6 +263,7 @@ export default function Contact({ onScheduleClick }) {
 
   return (
     <section id="contact" className="contact section">
+      <img src="/plant5.webp" alt="" aria-hidden="true" className="contact__plant" />
       <div className="container">
         <div className="contact__layout">
           <div className="contact__header-col">
@@ -322,7 +323,10 @@ export default function Contact({ onScheduleClick }) {
       <style>{`
         .contact {
           background: transparent;
+          position: relative;
+          overflow: hidden;
         }
+        .contact__plant { display: none; position: absolute; pointer-events: none; opacity: 0.82; z-index: 0; }
         .contact__layout {
           display: grid;
           grid-template-columns: 320px 1fr;
@@ -446,6 +450,13 @@ export default function Contact({ onScheduleClick }) {
           }
           .contact__header-col {
             position: static;
+          }
+          .contact__plant {
+            display: block;
+            width: 240px;
+            bottom: 1rem;
+            left: -15px;
+            transform: rotate(11deg);
           }
         }
 
