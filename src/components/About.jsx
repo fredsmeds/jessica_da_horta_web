@@ -198,7 +198,7 @@ export default function About() {
             width: 100%;
             max-height: 120px;
             object-fit: cover;
-            object-position: center;
+            object-position: top;
             margin: 1.5rem 0;
           }
         }

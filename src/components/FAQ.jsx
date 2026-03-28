@@ -50,8 +50,6 @@ export default function FAQ() {
             </div>
           </div>
 
-          <img src="/plant4.webp" alt="" aria-hidden="true" className="faq__plant" />
-
           <div className="faq__list-col">
             <div className="faq__list">
               {t.faq.items.map((item, i) => (
@@ -71,7 +69,6 @@ export default function FAQ() {
         .faq {
           background: transparent;
         }
-        .faq__plant { display: none; pointer-events: none; opacity: 0.88; }
         .faq__layout {
           display: grid;
           grid-template-columns: 300px 1fr;
@@ -174,14 +171,6 @@ export default function FAQ() {
           }
           .faq__deco {
             display: none;
-          }
-          .faq__plant {
-            display: block;
-            width: 100%;
-            max-height: 120px;
-            object-fit: cover;
-            object-position: center;
-            margin: 1.5rem 0;
           }
         }
       `}</style>

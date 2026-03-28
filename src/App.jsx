@@ -85,12 +85,16 @@ export default function App() {
       <main>
         <Hero onScheduleClick={() => scrollToSection('schedule')} />
         <About />
+        <img src="/plant2.webp" alt="" aria-hidden="true" className="sec-plant" />
         <div className="fondo4-band">
           <div className="fondo4-band__bg" />
           <Projects />
+          <img src="/plant6.webp" alt="" aria-hidden="true" className="sec-plant" />
           <FAQ />
         </div>
+        <img src="/plant4.webp" alt="" aria-hidden="true" className="sec-plant sec-plant--mid" />
         <Contact onScheduleClick={() => scrollToSection('schedule')} />
+        <img src="/plant5.webp" alt="" aria-hidden="true" className="sec-plant sec-plant--mid" />
         <ScheduleVisit />
       </main>
 
@@ -122,6 +126,18 @@ export default function App() {
         }
         .projects { background: transparent !important; }
         .faq { background: transparent !important; }
+        .sec-plant { display: none; pointer-events: none; opacity: 0.88; }
+        @media (max-width: 1024px) {
+          .sec-plant {
+            display: block;
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            object-position: top;
+          }
+          .sec-plant--mid { object-position: center; }
+          .fondo4-band__bg { display: none; }
+        }
 
         .modal-overlay {
           position: fixed;

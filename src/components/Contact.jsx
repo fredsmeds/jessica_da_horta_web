@@ -290,8 +290,6 @@ export default function Contact({ onScheduleClick }) {
             </div>
           </div>
 
-          <img src="/plant5.webp" alt="" aria-hidden="true" className="contact__plant" />
-
           <div className="contact__form-col">
             <div className="form-group">
               <label className="form-label">{t.contact.subjectLabel} <span className="required">*</span></label>
@@ -325,7 +323,6 @@ export default function Contact({ onScheduleClick }) {
         .contact {
           background: transparent;
         }
-        .contact__plant { display: none; pointer-events: none; opacity: 0.88; }
         .contact__layout {
           display: grid;
           grid-template-columns: 320px 1fr;
@@ -449,14 +446,6 @@ export default function Contact({ onScheduleClick }) {
           }
           .contact__header-col {
             position: static;
-          }
-          .contact__plant {
-            display: block;
-            width: 100%;
-            max-height: 120px;
-            object-fit: cover;
-            object-position: center;
-            margin: 1.5rem 0;
           }
         }
 

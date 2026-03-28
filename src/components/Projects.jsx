@@ -21,8 +21,6 @@ export default function Projects() {
           <p className="projects__intro">{t.projects.intro}</p>
         </div>
 
-        <img src="/plant3.webp" alt="" aria-hidden="true" className="projects__plant" />
-
         <div className="projects__grid">
           {placeholderProjects.map(project => (
             <div key={project.id} className="projects__item">
@@ -124,22 +122,9 @@ export default function Projects() {
           align-items: center;
         }
 
-        .projects__plant { display: none; pointer-events: none; opacity: 0.88; }
-
         @media (max-width: 900px) {
           .projects__grid {
             grid-template-columns: repeat(2, 1fr);
-          }
-        }
-
-        @media (max-width: 1024px) {
-          .projects__plant {
-            display: block;
-            width: 100%;
-            max-height: 120px;
-            object-fit: cover;
-            object-position: center;
-            margin: 1.5rem 0;
           }
         }
 
