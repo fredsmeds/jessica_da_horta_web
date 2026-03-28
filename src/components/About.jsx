@@ -132,6 +132,24 @@ export default function About() {
       <style>{`
         .about {
           background: var(--color-off-white);
+          position: relative;
+        }
+        .about .container {
+          position: relative;
+          z-index: 1;
+        }
+        .about__fondo {
+          position: absolute;
+          inset: 0;
+          background-image: url('/fondo1.webp');
+          background-size: cover;
+          background-position: center;
+          pointer-events: none;
+        }
+        @media (max-width: 768px) {
+          .about__fondo {
+            background-image: url('/fondo3.webp');
+          }
         }
         .about__bio-wrap {
           display: grid;

@@ -692,6 +692,7 @@ export default function ScheduleVisit() {
 
   return (
     <section id="schedule" className="sv section">
+      <div className="sv__fondo" />
       <div className="container">
         <p className="section-label">{s.sectionLabel}</p>
         <h2 className="section-title">{s.title}</h2>
