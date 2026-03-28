@@ -34,7 +34,6 @@ export default function About() {
 
           {/* Portrait */}
           <div className="about__portrait-col">
-            <img src="/plant1.webp" alt="" aria-hidden="true" className="about__plant about__plant--1" />
             <div className="about__portrait-frame">
               <img
                 src="/portrait.webp"
@@ -113,6 +112,8 @@ export default function About() {
 
         <hr className="divider" />
 
+        <img src="/plant1.webp" alt="" aria-hidden="true" className="about__plant about__plant--1" />
+
         {/* Extras mini-tab */}
         <div className="about__extras">
           <div className="about__extras-nav">
@@ -186,19 +187,20 @@ export default function About() {
           pointer-events: none;
         }
         .about__plant {
-          position: absolute;
+          display: none;
           pointer-events: none;
           opacity: 0.88;
-          z-index: 2;
-        }
-        .about__plant--1 {
-          width: 220px;
-          bottom: -20px;
-          right: -25px;
-          transform: rotate(-6deg);
         }
         @media (max-width: 1024px) {
           .about__fondo { background-image: none; }
+          .about__plant--1 {
+            display: block;
+            width: 100%;
+            max-height: 120px;
+            object-fit: cover;
+            object-position: center;
+            margin: 1.5rem 0;
+          }
         }
         .about__bio-wrap {
           display: grid;

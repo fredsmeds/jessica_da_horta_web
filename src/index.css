@@ -148,9 +148,7 @@ p {
 }
 
 hr.divider {
-  border: none;
-  border-top: 1px solid var(--color-border);
-  margin: var(--spacing-lg) 0;
+  display: none;
 }
 
 /* ===========================
