@@ -244,7 +244,22 @@ export async function onRequestPost(context) {
 
     // ── Write lead to KV ──────────────────────────────────────────────────────
     if (context.env.LEADS_KV) {
-      const leadKey = `lead:${Date.now()}:schedule`
+      const ts = Date.now()
+      const leadKey = `lead:${ts}:schedule`
+
+      // Store each attachment file in its own KV key (keeps lead payload small)
+      const attachmentMeta = []
+      for (let i = 0; i < attachments.length; i++) {
+        const att = attachments[i]
+        const attKey = `attachment:${ts}:${i}`
+        await context.env.LEADS_KV.put(attKey, JSON.stringify({
+          name: att.name,
+          type: att.type,
+          data: att.data,
+        }))
+        attachmentMeta.push({ key: attKey, name: att.name, type: att.type })
+      }
+
       const leadData = {
         type: 'schedule',
         date: new Date().toISOString(),
@@ -260,6 +275,7 @@ export async function onRequestPost(context) {
         distanceKm, travelFee, roundTripKm,
         breakdown, subtotal, notes,
         jessicaPdfBase64,
+        attachments: attachmentMeta,
       }
       await context.env.LEADS_KV.put(leadKey, JSON.stringify(leadData))
     }

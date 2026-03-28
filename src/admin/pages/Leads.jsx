@@ -85,6 +85,78 @@ function DownloadPdfBtn({ base64, filename }) {
   )
 }
 
+function downloadFile(file) {
+  const a = document.createElement('a')
+  a.href = file.data
+  a.download = file.name
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+}
+
+function AttachmentsSection({ attachments }) {
+  const [fileData, setFileData] = useState({})
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (!attachments || !attachments.length) { setLoading(false); return }
+    const token = sessionStorage.getItem('jdh_admin_token')
+    Promise.all(
+      attachments.map(att =>
+        fetch(`/api/admin/attachment?key=${encodeURIComponent(att.key)}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        }).then(r => r.ok ? r.json() : null).catch(() => null)
+      )
+    ).then(results => {
+      const map = {}
+      results.forEach((r, i) => { if (r) map[attachments[i].key] = r })
+      setFileData(map)
+      setLoading(false)
+    })
+  }, [])
+
+  if (!attachments || !attachments.length) return null
+
+  return (
+    <>
+      <LeadSection title="Ficheiros Anexados" />
+      <tr>
+        <td colSpan="2" style={{ paddingTop: '10px', paddingBottom: '8px' }}>
+          {loading ? (
+            <span style={{ fontSize: '12px', color: '#888' }}>A carregar ficheiros…</span>
+          ) : (
+            <div className="attachments-grid">
+              {attachments.map(att => {
+                const file = fileData[att.key]
+                const isImage = att.type?.startsWith('image/')
+                return (
+                  <div key={att.key} className="attachment-item">
+                    {file && isImage ? (
+                      <img src={file.data} alt={att.name} className="attachment-thumb" />
+                    ) : (
+                      <div className="attachment-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" />
+                        </svg>
+                      </div>
+                    )}
+                    <span className="attachment-name">{att.name}</span>
+                    {file && (
+                      <button className="attachment-dl" onClick={() => downloadFile(file)}>
+                        ↓ Guardar
+                      </button>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          )}
+        </td>
+      </tr>
+    </>
+  )
+}
+
 function LeadSection({ title }) {
   return (
     <tr><td colSpan="2" className="detail-section-title">{title}</td></tr>
@@ -256,6 +328,7 @@ function ScheduleLeadCard({ lead }) {
               <LeadRow label="Observações" value={lead.observations} />
 
               <EstimateSection breakdown={estimate.breakdown} subtotal={estimate.subtotal} notes={estimate.notes} />
+              <AttachmentsSection attachments={lead.attachments} />
             </tbody>
           </table>
         </div>
@@ -622,6 +695,58 @@ export default function Leads() {
           padding: 6px 0 2px;
           line-height: 1.8;
         }
+
+        .attachments-grid {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+          padding: 2px 0 4px;
+        }
+        .attachment-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 5px;
+          width: 110px;
+        }
+        .attachment-thumb {
+          width: 110px;
+          height: 85px;
+          object-fit: cover;
+          border-radius: 5px;
+          border: 1px solid #ddddd0;
+        }
+        .attachment-icon {
+          width: 110px;
+          height: 85px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #f0f0ea;
+          border-radius: 5px;
+          border: 1px solid #ddddd0;
+          color: #5a5a52;
+        }
+        .attachment-name {
+          font-size: 10px;
+          color: #5a5a52;
+          text-align: center;
+          word-break: break-all;
+          max-width: 110px;
+          line-height: 1.3;
+        }
+        .attachment-dl {
+          font-size: 11px;
+          font-family: 'Alexandria', sans-serif;
+          color: #555b37;
+          background: white;
+          border: 1px solid #ddddd0;
+          border-radius: 3px;
+          padding: 2px 8px;
+          cursor: pointer;
+          transition: border-color 0.12s;
+        }
+        .attachment-dl:hover { border-color: #555b37; }
 
         .empty-state {
           padding: 56px 24px;
