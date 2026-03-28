@@ -355,7 +355,7 @@ export default function Contact({ onScheduleClick }) {
           color: var(--color-primary);
         }
         .contact__form-col {
-          background: var(--color-white);
+          background: rgba(255, 255, 255, 0.30);
           padding: var(--spacing-md);
         }
         .contact__placeholder {

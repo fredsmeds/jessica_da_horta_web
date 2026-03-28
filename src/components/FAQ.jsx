@@ -90,6 +90,8 @@ export default function FAQ() {
         }
         .faq__list-col {
           padding-top: 0.25rem;
+          background: rgba(255, 255, 255, 0.30);
+          padding: 1.5rem;
         }
         .faq__list {
           border-top: 1px solid var(--color-border);

@@ -769,7 +769,7 @@ const svStyles = `
     display: grid; grid-template-columns: 220px 1fr;
     gap: var(--spacing-lg); margin-top: var(--spacing-md); align-items: start;
   }
-  .sv__sidebar { position: sticky; top: calc(var(--nav-height) + 2rem); }
+  .sv__sidebar { position: sticky; top: calc(var(--nav-height) + 2rem); background: rgba(255, 255, 255, 0.30); padding: 1.5rem; }
   .sv-steps { display: flex; flex-direction: column; gap: 0; }
   .sv-step {
     display: flex; align-items: flex-start; gap: 0.75rem;
@@ -794,7 +794,7 @@ const svStyles = `
   .sv-step__label { font-size: 0.75rem; font-weight: var(--weight-regular); color: var(--color-text-secondary); line-height: 1.4; padding-top: 2px; transition: color var(--transition); }
   .sv-step--active .sv-step__label { color: var(--color-primary); font-weight: var(--weight-medium); }
   .sv-step--done .sv-step__label { color: var(--color-primary); }
-  .sv__form-area { background: var(--color-off-white); padding: var(--spacing-md); }
+  .sv__form-area { background: rgba(255, 255, 255, 0.30); padding: var(--spacing-md); }
   .sv__form-header { margin-bottom: var(--spacing-md); padding-bottom: 1rem; border-bottom: 1px solid var(--color-border); }
   .sv__step-counter {
     font-size: 0.72rem; font-weight: var(--weight-medium); letter-spacing: 0.12em;

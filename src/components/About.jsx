@@ -283,6 +283,8 @@ export default function About() {
         }
         .about__extras {
           margin-top: var(--spacing-md);
+          background: rgba(255, 255, 255, 0.30);
+          padding: 1.5rem;
         }
         .about__extras-nav {
           display: flex;
