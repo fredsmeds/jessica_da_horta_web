@@ -22,6 +22,7 @@ export default function About() {
 
   return (
     <section id="about" className="about section">
+      <div className="about__fondo" />
       <div className="container">
 
         {/* Header */}

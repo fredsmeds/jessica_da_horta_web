@@ -1,9 +1,7 @@
-import { useMemo } from 'react'
 import { useLanguage } from '../i18n/index.jsx'
 
 export default function Hero({ onScheduleClick }) {
   const { t } = useLanguage()
-  const desktopBg = useMemo(() => Math.random() < 0.5 ? '/fondo1.webp' : '/fondo2.webp', [])
 
   return (
     <section id="home" className="hero">
@@ -22,10 +20,6 @@ export default function Hero({ onScheduleClick }) {
         </video>
         <div className="hero__overlay" />
       </div>
-
-      {/* Photoshop frame overlay */}
-      <div className="hero__frame hero__frame--desktop" style={{ backgroundImage: `url(${desktopBg})` }} />
-      <div className="hero__frame hero__frame--mobile" />
 
       {/* Content */}
       <div className="hero__content">
@@ -88,7 +82,7 @@ export default function Hero({ onScheduleClick }) {
         }
         .hero__content {
           position: relative;
-          z-index: 2;
+          z-index: 1;
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -122,7 +116,7 @@ export default function Hero({ onScheduleClick }) {
           bottom: 2.5rem;
           left: 50%;
           transform: translateX(-50%);
-          z-index: 2;
+          z-index: 1;
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -137,22 +131,6 @@ export default function Hero({ onScheduleClick }) {
         @keyframes scrollPulse {
           0%, 100% { opacity: 0.4; transform: scaleY(1); }
           50% { opacity: 1; transform: scaleY(1.1); }
-        }
-        .hero__frame {
-          position: absolute;
-          inset: 0;
-          z-index: 1;
-          background-size: cover;
-          background-position: center;
-          pointer-events: none;
-        }
-        .hero__frame--mobile {
-          background-image: url('/fondo3.webp');
-          display: none;
-        }
-        @media (max-width: 768px) {
-          .hero__frame--desktop { display: none; }
-          .hero__frame--mobile { display: block; }
         }
       `}</style>
     </section>
