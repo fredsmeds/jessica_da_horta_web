@@ -56,9 +56,18 @@ body {
   font-weight: var(--weight-regular);
   color: var(--color-text);
   background-color: var(--color-white);
+  background-image: url('/white-texture.webp');
+  background-size: cover;
+  background-attachment: fixed;
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+@media (max-width: 768px) {
+  body {
+    background-attachment: scroll;
+  }
 }
 
 img, video {

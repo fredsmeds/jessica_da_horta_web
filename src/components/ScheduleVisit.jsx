@@ -741,8 +741,8 @@ export default function ScheduleVisit() {
 // ── Styles ────────────────────────────────────────────────────────────────────
 
 const svStyles = `
-  .sv { background: var(--color-white); position: relative; overflow: hidden; }
-  .sv .container { position: relative; z-index: 1; background: rgba(255, 255, 255, 0.30); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); }
+  .sv { background: transparent; position: relative; overflow: hidden; }
+  .sv .container { position: relative; z-index: 1; }
   .sv__fondo {
     position: absolute;
     inset: 0;

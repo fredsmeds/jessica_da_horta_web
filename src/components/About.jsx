@@ -167,16 +167,13 @@ export default function About() {
 
       <style>{`
         .about {
-          background: var(--color-off-white);
+          background: transparent;
           position: relative;
           overflow: hidden;
         }
         .about .container {
           position: relative;
           z-index: 1;
-          background: rgba(248, 247, 244, 0.30);
-          backdrop-filter: blur(2px);
-          -webkit-backdrop-filter: blur(2px);
         }
         .about__fondo {
           position: absolute;

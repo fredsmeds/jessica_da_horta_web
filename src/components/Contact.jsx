@@ -321,7 +321,7 @@ export default function Contact({ onScheduleClick }) {
 
       <style>{`
         .contact {
-          background: var(--color-off-white);
+          background: transparent;
         }
         .contact__layout {
           display: grid;
