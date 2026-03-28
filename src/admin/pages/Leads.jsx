@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { generateJessicaPdf } from '../../utils/generatePdf.js'
 
 const SERVICE_LABELS = {
   '1A': '1A — Consultoria Simples',
@@ -19,7 +20,8 @@ const TABS = [
 
 function calculateEstimate(lead) {
   const breakdown = []
-  const visitFee = 90 + (lead.roundTripKm || 0) * 0.40
+  const travelFee = parseFloat(lead.travelFee) || (lead.roundTripKm || 0) * 0.40
+  const visitFee = 90 + travelFee
   breakdown.push({ label: 'Visita técnica inicial (base €90 + deslocação)', amount: visitFee })
   if (lead.soilAnalysis === 'no') breakdown.push({ label: 'Análise de solo', amount: 250 })
   if (lead.waterAnalysis === 'no') breakdown.push({ label: 'Análise de água', amount: 150 })
@@ -136,10 +138,38 @@ function ChevronIcon({ open }) {
 
 function ScheduleLeadCard({ lead }) {
   const [open, setOpen] = useState(false)
+  const [generating, setGenerating] = useState(false)
+  const [generatedPdf, setGeneratedPdf] = useState(null)
   const safeName = (lead.name || 'cliente').replace(/\s+/g, '_')
   const estimate = (lead.breakdown && lead.breakdown.length)
     ? { breakdown: lead.breakdown, subtotal: lead.subtotal, notes: lead.notes }
     : calculateEstimate(lead)
+  const pdfBase64 = lead.jessicaPdfBase64 || generatedPdf
+
+  async function handleGeneratePdf(e) {
+    e.stopPropagation()
+    setGenerating(true)
+    try {
+      // generateJessicaPdf expects fullName; KV stores it as name
+      const pdfData = { ...lead, fullName: lead.name }
+      const base64 = await generateJessicaPdf(pdfData)
+      setGeneratedPdf(base64)
+      // trigger download immediately
+      const bytes = atob(base64)
+      const u8 = new Uint8Array(bytes.length)
+      for (let i = 0; i < bytes.length; i++) u8[i] = bytes.charCodeAt(i)
+      const blob = new Blob([u8], { type: 'application/pdf' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url; a.download = `JESSICA_Visita_${safeName}.pdf`
+      document.body.appendChild(a); a.click()
+      document.body.removeChild(a); URL.revokeObjectURL(url)
+    } catch (err) {
+      console.error('PDF generation error:', err)
+    } finally {
+      setGenerating(false)
+    }
+  }
 
   return (
     <div className={`lead-card${open ? ' lead-card--open' : ''}`}>
@@ -154,7 +184,15 @@ function ScheduleLeadCard({ lead }) {
           {estimate.subtotal > 0 && (
             <span className="lead-estimate">€{estimate.subtotal.toFixed(0)}</span>
           )}
-          <DownloadPdfBtn base64={lead.jessicaPdfBase64} filename={`JESSICA_Visita_${safeName}.pdf`} />
+          {pdfBase64
+            ? <DownloadPdfBtn base64={pdfBase64} filename={`JESSICA_Visita_${safeName}.pdf`} />
+            : <button className="pdf-btn" onClick={handleGeneratePdf} disabled={generating}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                {generating ? 'A gerar…' : 'Gerar PDF'}
+              </button>
+          }
           <button className="toggle-btn"><ChevronIcon open={open} /></button>
         </div>
       </div>
