@@ -770,6 +770,7 @@ const svStyles = `
     background-position: top center;
     background-repeat: no-repeat;
     pointer-events: none;
+    opacity: 0.5;
   }
   @media (max-width: 1024px) {
     .sv__fondo { background-image: none; }

@@ -116,6 +116,7 @@ export default function App() {
           background-repeat: no-repeat;
           pointer-events: none;
           z-index: 0;
+          opacity: 0.5;
         }
         .fondo4-band .container {
           position: relative;

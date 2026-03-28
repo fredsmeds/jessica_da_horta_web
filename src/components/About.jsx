@@ -201,6 +201,7 @@ export default function About() {
           background-position: top center;
           background-repeat: no-repeat;
           pointer-events: none;
+          opacity: 0.5;
         }
         .about__bg-plant { display: none; }
         @media (max-width: 1024px) {
@@ -525,10 +526,23 @@ export default function About() {
           color: var(--color-text);
           line-height: 1.4;
           text-decoration: none;
-          transition: color var(--transition);
+          position: relative;
+          display: inline;
         }
-        .about__press-title:hover {
-          color: var(--color-primary);
+        .about__press-title::after {
+          content: '';
+          position: absolute;
+          left: 0;
+          bottom: -1px;
+          width: 100%;
+          height: 1px;
+          background: var(--color-text);
+          transform: scaleX(0);
+          transform-origin: left;
+          transition: transform 0.3s ease;
+        }
+        .about__press-title:hover::after {
+          transform: scaleX(1);
         }
         .about__press-meta {
           font-size: 0.76rem;
