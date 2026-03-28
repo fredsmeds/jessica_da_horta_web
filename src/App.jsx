@@ -30,10 +30,11 @@ function pickZone(excludeIdx) {
 function FlyingLadybugs() {
   const ref0 = useRef(null)
   const ref1 = useRef(null)
+  const ref2 = useRef(null)
 
   useEffect(() => {
     const SIZE = 26
-    const bugs = [ref0, ref1].map((ref, i) => {
+    const bugs = [ref0, ref1, ref2].map((ref, i) => {
       const zone = pickZone(-1)
       return {
         ref,
@@ -42,7 +43,7 @@ function FlyingLadybugs() {
         angle: 0,
         zoneIdx: zone.idx,
         state: 'resting',
-        restRemain: (i === 0 ? 2 : 5) + Math.random() * 3,
+        restRemain: (i === 0 ? 2 : i === 1 ? 5 : 8) + Math.random() * 3,
         wobblePhase: Math.random() * Math.PI * 2,
         speed: 55 + Math.random() * 45,
         target: null,
@@ -134,6 +135,7 @@ function FlyingLadybugs() {
     <>
       <img ref={ref0} src="/bug2_closed_wings.png" alt="" aria-hidden="true" style={style} />
       <img ref={ref1} src="/bug2_closed_wings.png" alt="" aria-hidden="true" style={style} />
+      <img ref={ref2} src="/bug2_closed_wings.png" alt="" aria-hidden="true" style={style} />
     </>
   )
 }
