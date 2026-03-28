@@ -9,6 +9,124 @@ import ScheduleVisit from './components/ScheduleVisit.jsx'
 import Footer from './components/Footer.jsx'
 import { useLanguage } from './i18n/index.jsx'
 
+// Landing zones: x/y as fraction of viewport, near plant-heavy edges
+const LEAF_ZONES = [
+  // Left edge — plants1,2,3 visible on desktop
+  { x: 0.04, y: 0.15 }, { x: 0.07, y: 0.30 }, { x: 0.03, y: 0.55 },
+  { x: 0.08, y: 0.70 }, { x: 0.05, y: 0.85 },
+  // Right edge
+  { x: 0.93, y: 0.20 }, { x: 0.96, y: 0.40 }, { x: 0.91, y: 0.60 },
+  { x: 0.94, y: 0.75 }, { x: 0.97, y: 0.90 },
+  // Upper corners (hero plants)
+  { x: 0.10, y: 0.08 }, { x: 0.88, y: 0.08 },
+]
+
+function pickZone(excludeIdx) {
+  let idx
+  do { idx = Math.floor(Math.random() * LEAF_ZONES.length) } while (idx === excludeIdx)
+  return { idx, x: LEAF_ZONES[idx].x * window.innerWidth, y: LEAF_ZONES[idx].y * window.innerHeight }
+}
+
+function FlyingLadybugs() {
+  const ref0 = useRef(null)
+  const ref1 = useRef(null)
+
+  useEffect(() => {
+    const SIZE = 22
+    const bugs = [ref0, ref1].map((ref, i) => {
+      const zone = pickZone(-1)
+      return {
+        ref,
+        x: zone.x, y: zone.y,
+        vx: 0, vy: 0,
+        angle: 0,
+        zoneIdx: zone.idx,
+        state: 'resting',
+        restRemain: (i === 0 ? 2 : 5) + Math.random() * 3,
+        wobblePhase: Math.random() * Math.PI * 2,
+        speed: 55 + Math.random() * 45,
+        target: null,
+      }
+    })
+
+    let last = null
+    let raf
+
+    function tick(ts) {
+      if (!last) last = ts
+      const dt = Math.min((ts - last) / 1000, 0.05)
+      last = ts
+
+      bugs.forEach(b => {
+        if (!b.ref.current) return
+
+        if (b.state === 'resting') {
+          b.restRemain -= dt
+          if (b.restRemain <= 0) {
+            const dest = pickZone(b.zoneIdx)
+            b.target = dest
+            b.zoneIdx = dest.idx
+            b.state = 'flying'
+            b.wobblePhase = Math.random() * Math.PI * 2
+            b.speed = 55 + Math.random() * 55
+          }
+        } else {
+          const dx = b.target.x - b.x
+          const dy = b.target.y - b.y
+          const dist = Math.sqrt(dx * dx + dy * dy)
+
+          if (dist < 6) {
+            b.x = b.target.x
+            b.y = b.target.y
+            b.vx = 0; b.vy = 0
+            b.state = 'resting'
+            b.restRemain = 3 + Math.random() * 6
+          } else {
+            b.wobblePhase += dt * 3.5
+            const nx = dx / dist, ny = dy / dist
+            const wobble = Math.sin(b.wobblePhase) * 0.35
+            const tx = (nx - ny * wobble) * b.speed
+            const ty = (ny + nx * wobble) * b.speed
+            const steer = Math.min(dt * 4, 1)
+            b.vx += (tx - b.vx) * steer
+            b.vy += (ty - b.vy) * steer
+            b.x += b.vx * dt
+            b.y += b.vy * dt
+            if (Math.hypot(b.vx, b.vy) > 2)
+              b.angle = Math.atan2(b.vy, b.vx) * 180 / Math.PI + 90
+          }
+        }
+
+        const el = b.ref.current
+        el.style.left = (b.x - SIZE / 2) + 'px'
+        el.style.top = (b.y - SIZE / 2) + 'px'
+        el.style.transform = `rotate(${b.angle}deg)`
+      })
+
+      raf = requestAnimationFrame(tick)
+    }
+
+    // Set initial positions
+    bugs.forEach(b => {
+      if (b.ref.current) {
+        b.ref.current.style.left = (b.x - SIZE / 2) + 'px'
+        b.ref.current.style.top = (b.y - SIZE / 2) + 'px'
+      }
+    })
+
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [])
+
+  const style = { position: 'fixed', width: 22, height: 22, pointerEvents: 'none', zIndex: 50, userSelect: 'none' }
+  return (
+    <>
+      <img ref={ref0} src="/bug2.webp" alt="" aria-hidden="true" style={style} />
+      <img ref={ref1} src="/bug2.webp" alt="" aria-hidden="true" style={style} />
+    </>
+  )
+}
+
 function PrivacyModal({ onClose }) {
   const { t } = useLanguage()
   return (
@@ -99,6 +217,8 @@ export default function App() {
         onNavClick={scrollToSection}
         onPrivacyClick={() => setShowPrivacy(true)}
       />
+
+      <FlyingLadybugs />
 
       {showPrivacy && <PrivacyModal onClose={() => setShowPrivacy(false)} />}
 
