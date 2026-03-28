@@ -235,6 +235,8 @@ export default function About() {
         }
         .about__bio-col {
           min-width: 0;
+          background: rgba(255, 255, 255, 0.30);
+          padding: 1.5rem;
         }
         .about__tabs {
           display: flex;
