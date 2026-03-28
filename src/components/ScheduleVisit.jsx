@@ -748,9 +748,7 @@ export default function ScheduleVisit() {
 const svStyles = `
   .sv { background: transparent; position: relative; overflow: hidden; }
   .sv .container { position: relative; z-index: 1; }
-  .sv__plant { display: none; position: absolute; pointer-events: none; opacity: 0.82; z-index: 0; }
-  .sv__plant--6 { width: 240px; top: 0; right: -15px; transform: rotate(8deg); }
-  .sv__plant--7 { width: 230px; bottom: 1rem; left: -15px; transform: rotate(-10deg); }
+  .sv__plant { display: none; pointer-events: none; opacity: 0.88; }
   .sv__fondo {
     position: absolute;
     inset: 0;
@@ -762,7 +760,14 @@ const svStyles = `
   }
   @media (max-width: 1024px) {
     .sv__fondo { background-image: none; }
-    .sv__plant { display: block !important; }
+    .sv__plant {
+      display: block;
+      width: 100%;
+      max-height: 120px;
+      object-fit: cover;
+      object-position: center;
+      margin: 1.5rem 0;
+    }
   }
   .sv__header { background: rgba(255, 255, 255, 0.30); padding: 1.5rem; display: inline-block; margin-bottom: var(--spacing-md); }
   .sv__intro { max-width: 680px; margin-top: 0.5rem; font-size: 0.95rem; }
