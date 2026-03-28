@@ -24,6 +24,7 @@ export default function About() {
   return (
     <section id="about" className="about section">
       <div className="about__fondo" />
+      <img src="/plant4.webp" alt="" aria-hidden="true" className="about__bg-plant" />
       <div className="container">
 
         {/* Header */}
@@ -112,8 +113,6 @@ export default function About() {
 
         <hr className="divider" />
 
-        <img src="/plant1.webp" alt="" aria-hidden="true" className="about__plant about__plant--1" />
-
         {/* Extras mini-tab */}
         <div className="about__extras">
           <div className="about__extras-nav">
@@ -139,7 +138,19 @@ export default function About() {
 
           <div className="about__extras-content">
             {extrasTab === 'press' && (
-              <p className="about__placeholder">{t.about.pressPlaceholder}</p>
+              <ul className="about__press-list">
+                {t.about.pressItems.map((item, i) => (
+                  <li key={i} className="about__press-item">
+                    <span className={`about__press-badge about__press-badge--${item.type}`}>
+                      {item.type === 'article' ? t.about.pressTypeArticle : t.about.pressTypeTalk}
+                    </span>
+                    <div className="about__press-body">
+                      <span className="about__press-title">{item.title}</span>
+                      <span className="about__press-meta">{item.outlet}{item.year ? ` · ${item.year}` : ''}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
             )}
             {extrasTab === 'cert' && (
               <ul className="about__cert-list">
@@ -186,20 +197,21 @@ export default function About() {
           background-repeat: no-repeat;
           pointer-events: none;
         }
-        .about__plant {
-          display: none;
-          pointer-events: none;
-          opacity: 0.88;
-        }
+        .about__bg-plant { display: none; }
         @media (max-width: 1024px) {
           .about__fondo { background-image: none; }
-          .about__plant--1 {
+          .about__bg-plant {
             display: block;
+            position: absolute;
             width: 100%;
-            max-height: 120px;
+            height: 100%;
             object-fit: cover;
             object-position: top;
-            margin: 1.5rem 0;
+            top: 0;
+            left: 0;
+            opacity: 0.18;
+            pointer-events: none;
+            z-index: 0;
           }
         }
         .about__bio-wrap {
@@ -461,6 +473,56 @@ export default function About() {
           font-size: 0.76rem;
           color: var(--color-text-secondary);
           margin-top: 0.1rem;
+        }
+
+        /* Press list */
+        .about__press-list {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 0.85rem;
+        }
+        .about__press-item {
+          display: flex;
+          align-items: flex-start;
+          gap: 0.75rem;
+        }
+        .about__press-badge {
+          flex-shrink: 0;
+          font-size: 0.62rem;
+          font-weight: var(--weight-medium);
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          padding: 0.2rem 0.5rem;
+          border-radius: 2px;
+          margin-top: 0.1rem;
+        }
+        .about__press-badge--article {
+          background: rgba(85, 91, 55, 0.10);
+          color: var(--color-primary);
+          border: 1px solid var(--color-primary);
+        }
+        .about__press-badge--talk {
+          background: transparent;
+          color: var(--color-text-secondary);
+          border: 1px solid var(--color-border);
+        }
+        .about__press-body {
+          display: flex;
+          flex-direction: column;
+          gap: 0.15rem;
+        }
+        .about__press-title {
+          font-size: 0.85rem;
+          font-weight: var(--weight-medium);
+          color: var(--color-text);
+          line-height: 1.4;
+        }
+        .about__press-meta {
+          font-size: 0.76rem;
+          color: var(--color-text-secondary);
         }
 
         @media (max-width: 1024px) {

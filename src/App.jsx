@@ -85,16 +85,13 @@ export default function App() {
       <main>
         <Hero onScheduleClick={() => scrollToSection('schedule')} />
         <About />
-        <img src="/plant2.webp" alt="" aria-hidden="true" className="sec-plant" />
         <div className="fondo4-band">
           <div className="fondo4-band__bg" />
+          <img src="/plant5.webp" alt="" aria-hidden="true" className="fondo4-bg-plant" />
           <Projects />
-          <img src="/plant6.webp" alt="" aria-hidden="true" className="sec-plant" />
           <FAQ />
         </div>
-        <img src="/plant4.webp" alt="" aria-hidden="true" className="sec-plant sec-plant--mid" />
         <Contact onScheduleClick={() => scrollToSection('schedule')} />
-        <img src="/plant5.webp" alt="" aria-hidden="true" className="sec-plant sec-plant--mid" />
         <ScheduleVisit />
       </main>
 
@@ -126,17 +123,22 @@ export default function App() {
         }
         .projects { background: transparent !important; }
         .faq { background: transparent !important; }
-        .sec-plant { display: none; pointer-events: none; opacity: 0.88; }
+        .fondo4-bg-plant { display: none; }
         @media (max-width: 1024px) {
-          .sec-plant {
+          .fondo4-band__bg { display: none; }
+          .fondo4-bg-plant {
             display: block;
+            position: absolute;
             width: 100%;
-            height: 120px;
+            height: 100%;
             object-fit: cover;
             object-position: top;
+            top: 0;
+            left: 0;
+            opacity: 0.18;
+            pointer-events: none;
+            z-index: 0;
           }
-          .sec-plant--mid { object-position: center; }
-          .fondo4-band__bg { display: none; }
         }
 
         .modal-overlay {
