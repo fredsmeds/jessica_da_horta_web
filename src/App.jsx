@@ -119,9 +119,6 @@ export default function App() {
         .fondo4-band .container {
           position: relative;
           z-index: 1;
-          background: rgba(255, 255, 255, 0.30);
-          backdrop-filter: blur(2px);
-          -webkit-backdrop-filter: blur(2px);
         }
         .projects { background: transparent !important; }
         .faq { background: transparent !important; }
