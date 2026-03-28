@@ -673,6 +673,7 @@ export default function ScheduleVisit() {
   if (status === 'success') {
     return (
       <section id="schedule" className="sv section">
+        <div className="sv__fondo" />
         <div className="container">
           <div className="sv__success">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--color-primary)' }}>
@@ -766,7 +767,19 @@ export default function ScheduleVisit() {
 // ── Styles ────────────────────────────────────────────────────────────────────
 
 const svStyles = `
-  .sv { background: var(--color-white); }
+  .sv { background: var(--color-white); position: relative; }
+  .sv .container { position: relative; z-index: 1; }
+  .sv__fondo {
+    position: absolute;
+    inset: 0;
+    background-image: url('/fondo2.webp');
+    background-size: cover;
+    background-position: center;
+    pointer-events: none;
+  }
+  @media (max-width: 768px) {
+    .sv__fondo { background-image: url('/fondo3.webp'); }
+  }
   .sv__intro { max-width: 680px; margin-top: 0.5rem; font-size: 0.95rem; }
   .sv__note {
     display: flex; align-items: flex-start; gap: 0.6rem;
