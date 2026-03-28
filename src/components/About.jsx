@@ -13,6 +13,7 @@ function PlaceholderBlock({ icon, text }) {
 export default function About() {
   const { t } = useLanguage()
   const [bioTab, setBioTab] = useState('early')
+  const [extrasTab, setExtrasTab] = useState('cert')
 
   const tabs = [
     { id: 'early', label: t.about.earlyLifeTitle },
@@ -111,49 +112,45 @@ export default function About() {
 
         <hr className="divider" />
 
-        {/* Three columns: Press, Certifications, Workshops */}
+        {/* Extras mini-tab */}
         <div className="about__extras">
-          <div className="about__extra-col">
-            <h4 className="about__extra-title">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{marginRight:'0.5rem', verticalAlign:'middle'}}>
-                <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/>
-                <path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/>
-              </svg>
+          <div className="about__extras-nav">
+            <button
+              className={`about__extras-tab${extrasTab === 'press' ? ' about__extras-tab--active' : ''}`}
+              onClick={() => setExtrasTab('press')}
+            >
               {t.about.pressTitle}
-            </h4>
-            <p className="about__placeholder">{t.about.pressPlaceholder}</p>
+            </button>
+            <button
+              className={`about__extras-tab${extrasTab === 'cert' ? ' about__extras-tab--active' : ''}`}
+              onClick={() => setExtrasTab('cert')}
+            >
+              {t.about.certTitle}
+            </button>
+            <button
+              className={`about__extras-tab${extrasTab === 'volunteer' ? ' about__extras-tab--active' : ''}`}
+              onClick={() => setExtrasTab('volunteer')}
+            >
+              {t.about.volunteerTitle}
+            </button>
           </div>
 
-          <div className="about__extra-col">
-            <h4 className="about__extra-title">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{marginRight:'0.5rem', verticalAlign:'middle'}}>
-                <circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
-              </svg>
-              {t.about.certTitle}
-            </h4>
-            {t.about.certItems ? (
+          <div className="about__extras-content">
+            {extrasTab === 'press' && (
+              <p className="about__placeholder">{t.about.pressPlaceholder}</p>
+            )}
+            {extrasTab === 'cert' && (
               <ul className="about__cert-list">
                 {t.about.certItems.map((cert, i) => (
                   <li key={i} className="about__cert-item">
                     <span className="about__cert-title">{cert.title}</span>
+                    <span className="about__cert-sep"> — </span>
                     <span className="about__cert-meta">{cert.issuer} · {cert.year}</span>
                   </li>
                 ))}
               </ul>
-            ) : (
-              <p className="about__placeholder">{t.about.certPlaceholder}</p>
             )}
-          </div>
-
-          <div className="about__extra-col">
-            <h4 className="about__extra-title">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{marginRight:'0.5rem', verticalAlign:'middle'}}>
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-              </svg>
-              {t.about.volunteerTitle || t.about.workshopsTitle}
-            </h4>
-            {t.about.volunteerItems ? (
+            {extrasTab === 'volunteer' && (
               <ul className="about__volunteer-list">
                 {t.about.volunteerItems.map((v, i) => (
                   <li key={i} className="about__volunteer-item">
@@ -162,8 +159,6 @@ export default function About() {
                   </li>
                 ))}
               </ul>
-            ) : (
-              <p className="about__placeholder">{t.about.workshopsPlaceholder}</p>
             )}
           </div>
         </div>
@@ -186,7 +181,7 @@ export default function About() {
         .about__fondo {
           position: absolute;
           inset: 0;
-          background-image: url('/fondo2.webp');
+          background-image: url('/fondo4.webp');
           background-size: 100% auto;
           background-position: top center;
           background-repeat: no-repeat;
@@ -288,13 +283,39 @@ export default function About() {
           margin-bottom: 0;
         }
         .about__extras {
-          display: grid;
-          grid-template-columns: 1fr 1fr 1fr;
-          gap: var(--spacing-md);
           margin-top: var(--spacing-md);
         }
-        .about__extra-col {
-          padding: var(--spacing-sm) 0;
+        .about__extras-nav {
+          display: flex;
+          gap: 0;
+          border-bottom: 1px solid var(--color-border);
+          margin-bottom: 1.5rem;
+        }
+        .about__extras-tab {
+          background: none;
+          border: none;
+          border-bottom: 2px solid transparent;
+          margin-bottom: -1px;
+          cursor: pointer;
+          font-family: var(--font-family);
+          font-size: 0.72rem;
+          font-weight: var(--weight-medium);
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: var(--color-text-secondary);
+          padding: 0.6rem 1.25rem 0.6rem 0;
+          transition: color var(--transition), border-color var(--transition);
+        }
+        .about__extras-tab + .about__extras-tab {
+          padding-left: 1.25rem;
+        }
+        .about__extras-tab:hover { color: var(--color-primary); }
+        .about__extras-tab--active {
+          color: var(--color-primary);
+          border-bottom-color: var(--color-primary);
+        }
+        .about__extras-content {
+          min-height: 120px;
         }
         .about__extra-title {
           font-size: 0.85rem;
@@ -401,7 +422,10 @@ export default function About() {
           flex-direction: column;
           gap: 0.75rem;
         }
-        .about__cert-item,
+        .about__cert-item {
+          display: block;
+          line-height: 1.5;
+        }
         .about__volunteer-item {
           display: flex;
           flex-direction: column;
@@ -412,6 +436,10 @@ export default function About() {
           font-weight: var(--weight-medium);
           color: var(--color-text);
           line-height: 1.4;
+        }
+        .about__cert-sep {
+          font-size: 0.76rem;
+          color: var(--color-border);
         }
         .about__cert-meta,
         .about__volunteer-meta {
@@ -448,9 +476,7 @@ export default function About() {
           .about__portrait-frame {
             margin-bottom: 0;
           }
-          .about__extras {
-            grid-template-columns: 1fr;
-          }
+
           .about__tab {
             font-size: 0.72rem;
             padding-right: 1rem;

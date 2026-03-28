@@ -109,7 +109,7 @@ export default function App() {
         .fondo4-band__bg {
           position: absolute;
           inset: 0;
-          background-image: url('/fondo4.webp');
+          background-image: url('/fondo2.webp');
           background-size: 100% auto;
           background-position: top center;
           background-repeat: no-repeat;

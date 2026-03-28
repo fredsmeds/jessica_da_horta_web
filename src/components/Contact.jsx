@@ -366,8 +366,17 @@ export default function Contact({ onScheduleClick }) {
           color: var(--color-primary);
         }
         .contact__linkedin {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
           text-decoration: none;
+          font-size: 0.88rem;
+          color: var(--color-text-secondary);
           transition: opacity var(--transition);
+        }
+        .contact__linkedin svg {
+          flex-shrink: 0;
+          color: var(--color-primary);
         }
         .contact__linkedin:hover {
           opacity: 0.7;
