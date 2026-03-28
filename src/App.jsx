@@ -32,7 +32,7 @@ function FlyingLadybugs() {
   const ref1 = useRef(null)
 
   useEffect(() => {
-    const SIZE = 22
+    const SIZE = 26
     const bugs = [ref0, ref1].map((ref, i) => {
       const zone = pickZone(-1)
       return {
@@ -46,6 +46,8 @@ function FlyingLadybugs() {
         wobblePhase: Math.random() * Math.PI * 2,
         speed: 55 + Math.random() * 45,
         target: null,
+        wingTimer: 0,
+        wingOpen: false,
       }
     })
 
@@ -61,6 +63,8 @@ function FlyingLadybugs() {
         if (!b.ref.current) return
 
         if (b.state === 'resting') {
+          b.wingOpen = false
+          b.wingTimer = 0
           b.restRemain -= dt
           if (b.restRemain <= 0) {
             const dest = pickZone(b.zoneIdx)
@@ -94,6 +98,12 @@ function FlyingLadybugs() {
             b.y += b.vy * dt
             if (Math.hypot(b.vx, b.vy) > 2)
               b.angle = Math.atan2(b.vy, b.vx) * 180 / Math.PI + 90
+            // Wing flap at ~12fps
+            b.wingTimer += dt
+            if (b.wingTimer > 0.08) {
+              b.wingTimer = 0
+              b.wingOpen = !b.wingOpen
+            }
           }
         }
 
@@ -101,6 +111,7 @@ function FlyingLadybugs() {
         el.style.left = (b.x - SIZE / 2) + 'px'
         el.style.top = (b.y - SIZE / 2) + 'px'
         el.style.transform = `rotate(${b.angle}deg)`
+        el.src = b.wingOpen ? '/bug2_open_wings.png' : '/bug2_closed_wings.png'
       })
 
       raf = requestAnimationFrame(tick)
@@ -118,11 +129,11 @@ function FlyingLadybugs() {
     return () => cancelAnimationFrame(raf)
   }, [])
 
-  const style = { position: 'fixed', width: 22, height: 22, pointerEvents: 'none', zIndex: 50, userSelect: 'none' }
+  const style = { position: 'fixed', width: 26, height: 26, pointerEvents: 'none', zIndex: 50, userSelect: 'none' }
   return (
     <>
-      <img ref={ref0} src="/bug2.webp" alt="" aria-hidden="true" style={style} />
-      <img ref={ref1} src="/bug2.webp" alt="" aria-hidden="true" style={style} />
+      <img ref={ref0} src="/bug2_closed_wings.png" alt="" aria-hidden="true" style={style} />
+      <img ref={ref1} src="/bug2_closed_wings.png" alt="" aria-hidden="true" style={style} />
     </>
   )
 }
