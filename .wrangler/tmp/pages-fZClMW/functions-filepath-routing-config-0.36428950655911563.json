@@ -1,0 +1,93 @@
+{
+  "routes": [
+    {
+      "routePath": "/api/admin/attachment",
+      "mountPath": "/api/admin",
+      "method": "GET",
+      "module": [
+        "api/admin/attachment.js:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/admin/leads",
+      "mountPath": "/api/admin",
+      "method": "GET",
+      "module": [
+        "api/admin/leads.js:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/admin/login",
+      "mountPath": "/api/admin",
+      "method": "POST",
+      "module": [
+        "api/admin/login.js:onRequestPost"
+      ]
+    },
+    {
+      "routePath": "/api/admin/prices",
+      "mountPath": "/api/admin",
+      "method": "GET",
+      "module": [
+        "api/admin/prices.js:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/admin/prices",
+      "mountPath": "/api/admin",
+      "method": "PUT",
+      "module": [
+        "api/admin/prices.js:onRequestPut"
+      ]
+    },
+    {
+      "routePath": "/api/admin/suppliers",
+      "mountPath": "/api/admin",
+      "method": "DELETE",
+      "module": [
+        "api/admin/suppliers.js:onRequestDelete"
+      ]
+    },
+    {
+      "routePath": "/api/admin/suppliers",
+      "mountPath": "/api/admin",
+      "method": "GET",
+      "module": [
+        "api/admin/suppliers.js:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/admin/suppliers",
+      "mountPath": "/api/admin",
+      "method": "POST",
+      "module": [
+        "api/admin/suppliers.js:onRequestPost"
+      ]
+    },
+    {
+      "routePath": "/api/admin/suppliers",
+      "mountPath": "/api/admin",
+      "method": "PUT",
+      "module": [
+        "api/admin/suppliers.js:onRequestPut"
+      ]
+    },
+    {
+      "routePath": "/api/contact",
+      "mountPath": "/api",
+      "method": "POST",
+      "module": [
+        "api/contact.js:onRequestPost"
+      ]
+    },
+    {
+      "routePath": "/api/schedule",
+      "mountPath": "/api",
+      "method": "POST",
+      "module": [
+        "api/schedule.js:onRequestPost"
+      ]
+    }
+  ],
+  "baseURL": "/"
+}
