@@ -163,14 +163,9 @@ function CheckGroup({ options, values, onChange }) {
 
 function Step1({ data, set, t, stepError }) {
   const s = t.schedule
-  const [distInfo, setDistInfo] = useState(null)
 
   useEffect(() => {
-    if (!data.address || !data.postalCode || data.address.length < 5) {
-      setDistInfo(null)
-      return
-    }
-    setDistInfo({ loading: true })
+    if (!data.address || !data.postalCode || data.address.length < 5) return
     const timer = setTimeout(async () => {
       try {
         const q = encodeURIComponent(`${data.address} ${data.postalCode} Portugal`)
@@ -179,17 +174,14 @@ function Step1({ data, set, t, stepError }) {
           { headers: { 'Accept-Language': 'pt', 'User-Agent': 'JessicaDaHortaWeb/1.0' } }
         )
         const results = await res.json()
-        if (!results.length) { setDistInfo({ error: true }); return }
+        if (!results.length) return
         const km = Math.round(haversine(JESSICA_LAT, JESSICA_LNG, parseFloat(results[0].lat), parseFloat(results[0].lon)))
         const roundTripKm = km * 2
         const fee = Math.round(roundTripKm * 0.40 * 100) / 100
-        setDistInfo({ km, fee, roundTripKm })
         set('distanceKm', km)
         set('travelFee', fee)
         set('roundTripKm', roundTripKm)
-      } catch {
-        setDistInfo({ error: true })
-      }
+      } catch { /* silent */ }
     }, 900)
     return () => clearTimeout(timer)
   }, [data.address, data.postalCode]) // eslint-disable-line
@@ -221,24 +213,6 @@ function Step1({ data, set, t, stepError }) {
         {stepError && <p className="file-upload__error" style={{ marginTop: '0.35rem' }}>{stepError}</p>}
       </div>
 
-      <div className="sv-disclaimer">
-        <div className="sv-disclaimer__title">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-          </svg>
-          {s.disclaimerTitle}
-        </div>
-        <p className="sv-disclaimer__text">{s.disclaimerText}</p>
-        {distInfo && (
-          <div className="sv-disclaimer__dist">
-            {distInfo.loading && <span className="sv-disclaimer__calc">{s.disclaimerCalc}</span>}
-            {distInfo.error && <span className="sv-disclaimer__error">{s.disclaimerError}</span>}
-            {distInfo.km !== undefined && (
-              <span>{s.disclaimerDist.replace('{km}', distInfo.km)}</span>
-            )}
-          </div>
-        )}
-      </div>
     </>
   )
 }
@@ -767,18 +741,22 @@ export default function ScheduleVisit() {
 // ── Styles ────────────────────────────────────────────────────────────────────
 
 const svStyles = `
-  .sv { background: var(--color-white); position: relative; }
+  .sv { background: var(--color-white); position: relative; overflow: hidden; }
   .sv .container { position: relative; z-index: 1; }
   .sv__fondo {
     position: absolute;
     inset: 0;
-    background-image: url('/fondo2.webp');
+    background-image: url('/fondo1.webp');
     background-size: cover;
     background-position: center;
     pointer-events: none;
   }
   @media (max-width: 768px) {
-    .sv__fondo { background-image: url('/fondo3.webp'); }
+    .sv__fondo {
+      background-image: url('/fondo3.webp');
+      background-size: 100% 100%;
+      background-position: top center;
+    }
   }
   .sv__intro { max-width: 680px; margin-top: 0.5rem; font-size: 0.95rem; }
   .sv__note {

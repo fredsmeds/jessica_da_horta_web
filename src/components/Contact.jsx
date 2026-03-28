@@ -177,38 +177,35 @@ function PricesForm({ t, onPrivacyClick }) {
 }
 
 function JobsForm({ t, onPrivacyClick }) {
-  const [form, setForm] = useState({
-    name: '', dob: '', nationality: '', idNumber: '',
-    nif: '', iban: '', phone: '', email: '',
-    experience: '', availability: '',
-  })
+  const [form, setForm] = useState({ name: '', phone: '', email: '', experience: '', privacy: false })
+  const [status, setStatus] = useState(null)
 
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }))
 
-  const handleDownload = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    const headers = [
-      'Nome', 'Data de Nascimento', 'Nacionalidade', 'BI/CC', 'NIF', 'IBAN',
-      'Telefone', 'Email', 'Experiência', 'Disponibilidade',
-    ]
-    const values = [
-      form.name, form.dob, form.nationality, form.idNumber,
-      form.nif, form.iban, form.phone, form.email,
-      form.experience, form.availability,
-    ]
-    const escape = (val) => `"${String(val).replace(/"/g, '""')}"`
-    const csvContent = [headers.map(escape).join(','), values.map(escape).join(',')].join('\n')
-    const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `candidatura_${form.name.replace(/\s+/g, '_') || 'jardineiro'}.csv`
-    a.click()
-    URL.revokeObjectURL(url)
+    if (!form.privacy) return
+    setStatus('loading')
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...form, subject: 'jobs' }),
+      })
+      if (!res.ok) throw new Error()
+      setStatus('success')
+    } catch {
+      setStatus('error')
+    }
+  }
+
+  if (status === 'success') {
+    return <div className="alert alert-success"><strong>{t.contact.successTitle}.</strong> {t.contact.successText}</div>
   }
 
   return (
-    <form onSubmit={handleDownload} noValidate>
+    <form onSubmit={handleSubmit} noValidate>
+      {status === 'error' && <div className="alert alert-error">{t.contact.errorText}</div>}
       <p className="jobs-intro">{t.contact.jobsIntro}</p>
       <div className="form-row">
         <div className="form-group">
@@ -216,56 +213,27 @@ function JobsForm({ t, onPrivacyClick }) {
           <input className="form-input" type="text" required value={form.name} onChange={e => set('name', e.target.value)} />
         </div>
         <div className="form-group">
-          <label className="form-label">{t.contact.jobsAgeLabel} <span className="required">*</span></label>
-          <input className="form-input" type="date" required value={form.dob} onChange={e => set('dob', e.target.value)} />
-        </div>
-      </div>
-      <div className="form-row">
-        <div className="form-group">
-          <label className="form-label">{t.contact.jobsNationalityLabel} <span className="required">*</span></label>
-          <input className="form-input" type="text" required value={form.nationality} onChange={e => set('nationality', e.target.value)} />
-        </div>
-        <div className="form-group">
-          <label className="form-label">{t.contact.jobsIdLabel} <span className="required">*</span></label>
-          <input className="form-input" type="text" required value={form.idNumber} onChange={e => set('idNumber', e.target.value)} />
-        </div>
-      </div>
-      <div className="form-row">
-        <div className="form-group">
-          <label className="form-label">{t.contact.jobsNifLabel} <span className="required">*</span></label>
-          <input className="form-input" type="text" required value={form.nif} onChange={e => set('nif', e.target.value)} />
-        </div>
-        <div className="form-group">
-          <label className="form-label">{t.contact.jobsIbanLabel}</label>
-          <input className="form-input" type="text" value={form.iban} onChange={e => set('iban', e.target.value)} />
-        </div>
-      </div>
-      <div className="form-row">
-        <div className="form-group">
-          <label className="form-label">{t.contact.jobsPhoneLabel} <span className="required">*</span></label>
-          <input className="form-input" type="tel" required value={form.phone} onChange={e => set('phone', e.target.value)} />
-        </div>
-        <div className="form-group">
           <label className="form-label">{t.contact.jobsEmailLabel} <span className="required">*</span></label>
           <input className="form-input" type="email" required value={form.email} onChange={e => set('email', e.target.value)} />
         </div>
       </div>
       <div className="form-group">
-        <label className="form-label">{t.contact.jobsExperienceLabel} <span className="required">*</span></label>
-        <textarea className="form-textarea" required value={form.experience} onChange={e => set('experience', e.target.value)} placeholder={t.contact.jobsExperiencePlaceholder} />
+        <label className="form-label">{t.contact.jobsPhoneLabel} <span className="required">*</span></label>
+        <input className="form-input" type="tel" required value={form.phone} onChange={e => set('phone', e.target.value)} />
       </div>
       <div className="form-group">
-        <label className="form-label">{t.contact.jobsAvailabilityLabel}</label>
-        <textarea className="form-textarea" style={{minHeight:'80px'}} value={form.availability} onChange={e => set('availability', e.target.value)} placeholder={t.contact.jobsAvailabilityPlaceholder} />
+        <label className="form-label">{t.contact.jobsExperienceLabel}</label>
+        <textarea className="form-textarea" value={form.experience} onChange={e => set('experience', e.target.value)} placeholder={t.contact.jobsExperiencePlaceholder} />
       </div>
-      <p className="form-hint" style={{marginBottom:'1.5rem'}}>{t.contact.jobsNote}</p>
-      <button type="submit" className="btn btn-primary">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-          <polyline points="7 10 12 15 17 10"/>
-          <line x1="12" y1="15" x2="12" y2="3"/>
-        </svg>
-        {t.contact.jobsDownloadBtn}
+      <div className="form-checkbox-group">
+        <input type="checkbox" id="privacy-jobs" checked={form.privacy} onChange={e => set('privacy', e.target.checked)} required />
+        <label htmlFor="privacy-jobs">
+          {t.contact.privacyText}{' '}
+          <button type="button" className="link-btn" onClick={onPrivacyClick}>{t.contact.privacyLink}</button>
+        </label>
+      </div>
+      <button type="submit" className="btn btn-primary" disabled={!form.privacy || status === 'loading'}>
+        {status === 'loading' ? t.contact.sending : t.contact.sendBtn}
       </button>
     </form>
   )

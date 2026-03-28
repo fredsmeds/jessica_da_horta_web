@@ -228,7 +228,7 @@ export async function onRequestPost(context) {
       headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         from: 'Jessica da Horta Garden Design <noreply@jessicadahorta.com>',
-        to: [JESSICA_EMAIL, 'jessicadhg@gmail.com', 'contact@jessicadahorta.com'],
+        to: ['jessicadhg.pais.agem@gmail.com', 'jessicadhg@gmail.com', 'contact@jessicadahorta.com'],
         subject: `[Visita] Pedido de agendamento — ${fullName}`,
         html: htmlBody,
         reply_to: email,
@@ -240,6 +240,28 @@ export async function onRequestPost(context) {
       const err = await toJessicaRes.text()
       console.error(`Resend error (Jessica) — status ${toJessicaRes.status}:`, err)
       return new Response(JSON.stringify({ error: 'Email send failed', detail: err }), { status: 500 })
+    }
+
+    // ── Write lead to KV ──────────────────────────────────────────────────────
+    if (context.env.LEADS_KV) {
+      const leadKey = `lead:${Date.now()}:schedule`
+      const leadData = {
+        type: 'schedule',
+        date: new Date().toISOString(),
+        name: fullName, email, phone, address, postalCode,
+        totalArea, interventionArea, limits, topo, topoFormat, constructions, constructionsDesc,
+        soilAnalysis, waterAnalysis, waterSources, waterStorage,
+        hasPets, petsDesc, petsAccess,
+        plantingStyle, pathStyle, plantTypes, colors, desiredElements,
+        serviceType, hiredArchitect,
+        installation, priorities, additionalDesc, preferredDate, preferredTime,
+        maintenanceTeam, maintenanceDetails,
+        observations,
+        distanceKm, travelFee, roundTripKm,
+        breakdown, subtotal, notes,
+        jessicaPdfBase64,
+      }
+      await context.env.LEADS_KV.put(leadKey, JSON.stringify(leadData))
     }
 
     // ── Send confirmation to client ───────────────────────────────────────────

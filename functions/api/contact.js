@@ -7,7 +7,7 @@ export async function onRequestPost(context) {
 
   try {
     const body = await request.json()
-    const { name, email, phone, zip, message, subject } = body
+    const { name, email, phone, zip, message, experience, subject } = body
 
     const RESEND_API_KEY = env.RESEND_API_KEY
     const JESSICA_EMAIL = env.JESSICA_EMAIL || 'contact@jessicadahorta.com'
@@ -15,9 +15,21 @@ export async function onRequestPost(context) {
     const subjectLabels = {
       general: 'Consulta Geral',
       prices: 'Preços e Orçamentos',
+      jobs: 'Candidatura Freelance',
     }
 
     const subjectLine = `[Website] ${subjectLabels[subject] || 'Contacto'} — ${name}`
+
+    const row = (label, value) => `
+      <tr>
+        <td style="padding:10px 0;border-bottom:1px solid #e5e5da;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:#888;width:120px;">${label}</td>
+        <td style="padding:10px 0;border-bottom:1px solid #e5e5da;font-size:15px;">${value || '—'}</td>
+      </tr>`
+
+    const jobsRows = subject === 'jobs' && experience
+      ? `<tr><td colspan="2" style="padding:20px 0 8px;font-size:12px;font-weight:bold;text-transform:uppercase;letter-spacing:0.12em;color:#555b37;">Percurso / Experiência</td></tr>
+         <tr><td colspan="2" style="padding:0 0 16px;font-size:14px;line-height:1.7;white-space:pre-wrap;color:#5a5a52;">${experience}</td></tr>`
+      : ''
 
     const htmlBody = `
       <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; color: #1a1a18;">
@@ -32,28 +44,14 @@ export async function onRequestPost(context) {
 
         <div style="padding: 0 32px 32px;">
           <table style="width: 100%; border-collapse: collapse;">
-            <tr>
-              <td style="padding: 10px 0; border-bottom: 1px solid #e5e5da; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: #888; width: 120px;">Nome</td>
-              <td style="padding: 10px 0; border-bottom: 1px solid #e5e5da; font-size: 15px;">${name || '—'}</td>
-            </tr>
-            <tr>
-              <td style="padding: 10px 0; border-bottom: 1px solid #e5e5da; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: #888;">Email</td>
-              <td style="padding: 10px 0; border-bottom: 1px solid #e5e5da; font-size: 15px;">${email || '—'}</td>
-            </tr>
-            <tr>
-              <td style="padding: 10px 0; border-bottom: 1px solid #e5e5da; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: #888;">Telefone</td>
-              <td style="padding: 10px 0; border-bottom: 1px solid #e5e5da; font-size: 15px;">${phone || '—'}</td>
-            </tr>
-            <tr>
-              <td style="padding: 10px 0; border-bottom: 1px solid #e5e5da; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: #888;">Cód. Postal</td>
-              <td style="padding: 10px 0; border-bottom: 1px solid #e5e5da; font-size: 15px;">${zip || '—'}</td>
-            </tr>
+            ${row('Nome', name)}
+            ${row('Email', email)}
+            ${row('Telefone', phone)}
+            ${subject !== 'jobs' ? row('Cód. Postal', zip) : ''}
+            ${jobsRows}
+            ${subject !== 'jobs' ? `<tr><td colspan="2" style="padding:20px 0 8px;font-size:12px;font-weight:bold;text-transform:uppercase;letter-spacing:0.12em;color:#555b37;">Mensagem</td></tr>
+            <tr><td colspan="2" style="padding:0 0 16px;font-size:14px;line-height:1.7;white-space:pre-wrap;color:#5a5a52;">${message || '—'}</td></tr>` : ''}
           </table>
-
-          <div style="margin-top: 24px;">
-            <p style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: #888; margin-bottom: 10px;">Mensagem</p>
-            <p style="font-size: 15px; line-height: 1.7; white-space: pre-wrap;">${message || '—'}</p>
-          </div>
         </div>
       </div>
     `
@@ -78,6 +76,18 @@ export async function onRequestPost(context) {
       const err = await toJessicaRes.text()
       console.error('Resend error (to jessica):', err)
       return new Response(JSON.stringify({ error: 'Email send failed' }), { status: 500 })
+    }
+
+    // ── Write lead to KV ─────────────────────────────────────────────────────
+    if (context.env.LEADS_KV) {
+      const leadKey = `lead:${Date.now()}:${subject}`
+      const leadData = {
+        type: subject,
+        date: new Date().toISOString(),
+        name, email, phone,
+        message: subject === 'jobs' ? experience : message,
+      }
+      await context.env.LEADS_KV.put(leadKey, JSON.stringify(leadData))
     }
 
     // Send confirmation to customer

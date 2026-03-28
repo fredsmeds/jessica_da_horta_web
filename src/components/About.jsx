@@ -133,6 +133,7 @@ export default function About() {
         .about {
           background: var(--color-off-white);
           position: relative;
+          overflow: hidden;
         }
         .about .container {
           position: relative;
@@ -141,7 +142,7 @@ export default function About() {
         .about__fondo {
           position: absolute;
           inset: 0;
-          background-image: url('/fondo1.webp');
+          background-image: url('/fondo2.webp');
           background-size: cover;
           background-position: center;
           pointer-events: none;
@@ -149,6 +150,8 @@ export default function About() {
         @media (max-width: 768px) {
           .about__fondo {
             background-image: url('/fondo3.webp');
+            background-size: 100% 100%;
+            background-position: top center;
           }
         }
         .about__bio-wrap {

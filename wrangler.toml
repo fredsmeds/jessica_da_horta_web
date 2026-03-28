@@ -10,3 +10,15 @@ JESSICA_EMAIL = "contact@jessicadahorta.com"
 # RESEND_API_KEY must be set as a Cloudflare Pages Secret:
 # Dashboard → Pages → jessicadhg-pais-agem → Settings → Environment variables
 # Add as a "Secret" (encrypted): RESEND_API_KEY = re_CwKRV8ZW_...
+
+[[kv_namespaces]]
+binding = "LEADS_KV"
+id = "89b7819761e247d7b6b19c4cb8b070c6"
+
+[[kv_namespaces]]
+binding = "PRICES_KV"
+id = "a03f3c33d15e4dfb8a0bc297b38d0a0b"
+
+[[kv_namespaces]]
+binding = "SUPPLIERS_KV"
+id = "7624d32b2560492eba0a18fcfc9b16d2"

@@ -7,6 +7,11 @@
   padding: 0;
 }
 
+/* Custom cursor */
+* {
+  cursor: url('/bug1.png') 0 0, auto;
+}
+
 :root {
   --color-primary: #555b37;
   --color-primary-light: #6e7549;
@@ -392,4 +397,11 @@ hr.divider {
   .container {
     padding: 0 1.25rem;
   }
+
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.6rem; }
+  h3 { font-size: 1.25rem; }
+  h4 { font-size: 1rem; }
+
+  p { font-size: 0.9rem; }
 }
