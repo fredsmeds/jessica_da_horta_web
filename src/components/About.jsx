@@ -145,7 +145,12 @@ export default function About() {
                       {item.type === 'article' ? t.about.pressTypeArticle : t.about.pressTypeTalk}
                     </span>
                     <div className="about__press-body">
-                      <span className="about__press-title">{item.title}</span>
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="about__press-title"
+                      >{item.title}</a>
                       <span className="about__press-meta">{item.outlet}{item.year ? ` · ${item.year}` : ''}</span>
                     </div>
                   </li>
@@ -519,6 +524,11 @@ export default function About() {
           font-weight: var(--weight-medium);
           color: var(--color-text);
           line-height: 1.4;
+          text-decoration: none;
+          transition: color var(--transition);
+        }
+        .about__press-title:hover {
+          color: var(--color-primary);
         }
         .about__press-meta {
           font-size: 0.76rem;
