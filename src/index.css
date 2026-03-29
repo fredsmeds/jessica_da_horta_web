@@ -7,9 +7,9 @@
   padding: 0;
 }
 
-/* Custom cursor */
-* {
-  cursor: url('/bee.webp') 0 0, auto;
+/* Custom cursor — hidden so JS fake cursor (animated GIF) takes over */
+@media (hover: hover) {
+  * { cursor: none !important; }
 }
 
 :root {
