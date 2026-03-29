@@ -313,9 +313,6 @@ export default function App() {
           <Projects />
           <FAQ />
         </div>
-        <div className="portrait-band">
-          <img src="/portrait.webp" alt="Jessica da Horta" className="portrait-band__img" />
-        </div>
         <Contact onScheduleClick={() => scrollToSection('schedule')} />
         <ScheduleVisit />
       </main>
@@ -367,25 +364,6 @@ export default function App() {
             opacity: 0.18;
             pointer-events: none;
             z-index: 0;
-          }
-        }
-
-        .portrait-band {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          padding: var(--spacing-xl) 0;
-        }
-        .portrait-band__img {
-          width: 100%;
-          max-width: 480px;
-          height: auto;
-          display: block;
-          margin: 0 auto;
-        }
-        @media (max-width: 768px) {
-          .portrait-band__img {
-            max-width: 320px;
           }
         }
 
