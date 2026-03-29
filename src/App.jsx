@@ -9,22 +9,20 @@ import ScheduleVisit from './components/ScheduleVisit.jsx'
 import Footer from './components/Footer.jsx'
 import { useLanguage } from './i18n/index.jsx'
 
-// Landing zones: x/y as fraction of viewport, near plant-heavy edges
-const LEAF_ZONES = [
-  // Left edge — plants1,2,3 visible on desktop
-  { x: 0.04, y: 0.15 }, { x: 0.07, y: 0.30 }, { x: 0.03, y: 0.55 },
-  { x: 0.08, y: 0.70 }, { x: 0.05, y: 0.85 },
-  // Right edge
-  { x: 0.93, y: 0.20 }, { x: 0.96, y: 0.40 }, { x: 0.91, y: 0.60 },
-  { x: 0.94, y: 0.75 }, { x: 0.97, y: 0.90 },
-  // Upper corners (hero plants)
-  { x: 0.10, y: 0.08 }, { x: 0.88, y: 0.08 },
-]
+// Leaf landing spots per section, as fractions of each section's bounding rect.
+// Positioned near edges where fondo botanical art is concentrated.
+const SECTION_LEAF_SPOTS = {
+  about:    [{ xF: 0.06, yF: 0.30 }, { xF: 0.92, yF: 0.45 }, { xF: 0.05, yF: 0.68 }],
+  faq:      [{ xF: 0.08, yF: 0.28 }, { xF: 0.91, yF: 0.52 }, { xF: 0.06, yF: 0.78 }],
+  schedule: [{ xF: 0.07, yF: 0.22 }, { xF: 0.93, yF: 0.44 }, { xF: 0.04, yF: 0.66 }],
+}
+const BUG_HOME = ['about', 'faq', 'schedule']
 
-function pickZone(excludeIdx) {
-  let idx
-  do { idx = Math.floor(Math.random() * LEAF_ZONES.length) } while (idx === excludeIdx)
-  return { idx, x: LEAF_ZONES[idx].x * window.innerWidth, y: LEAF_ZONES[idx].y * window.innerHeight }
+function getSpotVP(sectionId, xF, yF) {
+  const el = document.getElementById(sectionId)
+  if (!el) return null
+  const r = el.getBoundingClientRect()
+  return { x: r.left + r.width * xF, y: r.top + r.height * yF }
 }
 
 function FlyingLadybugs() {
@@ -34,23 +32,56 @@ function FlyingLadybugs() {
 
   useEffect(() => {
     const SIZE = 26
-    const bugs = [ref0, ref1, ref2].map((ref, i) => {
-      const zone = pickZone(-1)
-      return {
-        ref,
-        x: zone.x, y: zone.y,
-        vx: 0, vy: 0,
-        angle: 0,
-        zoneIdx: zone.idx,
-        state: 'resting',
-        restRemain: (i === 0 ? 2 : i === 1 ? 5 : 8) + Math.random() * 3,
-        wobblePhase: Math.random() * Math.PI * 2,
-        speed: 55 + Math.random() * 45,
-        target: null,
-        wingTimer: 0,
-        wingOpen: false,
-      }
+    const refs = [ref0, ref1, ref2]
+
+    const bugs = refs.map((ref, i) => ({
+      ref,
+      sectionId: BUG_HOME[i],
+      spotIdx: 0,
+      x: -100, y: -100,
+      vx: 0, vy: 0,
+      angle: 0,
+      state: 'hidden',
+      restRemain: 0,
+      wobblePhase: Math.random() * Math.PI * 2,
+      speed: 60 + Math.random() * 40,
+      target: null,
+      wingTimer: 0,
+      wingOpen: false,
+    }))
+
+    // Hide all initially
+    refs.forEach(r => { if (r.current) r.current.style.opacity = '0' })
+
+    // Activate each bug when its section enters the viewport
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return
+        const bug = bugs.find(b => b.sectionId === entry.target.id)
+        if (!bug || bug.state !== 'hidden') return
+        const spots = SECTION_LEAF_SPOTS[bug.sectionId]
+        const pos = getSpotVP(bug.sectionId, spots[0].xF, spots[0].yF)
+        if (!pos) return
+        bug.x = pos.x
+        bug.y = pos.y
+        bug.spotIdx = 0
+        bug.state = 'resting'
+        bug.restRemain = 1.5 + Math.random() * 2
+      })
+    }, { threshold: 0.2 })
+
+    BUG_HOME.forEach(id => {
+      const el = document.getElementById(id)
+      if (el) observer.observe(el)
     })
+
+    function pickNextSpot(bug) {
+      const spots = SECTION_LEAF_SPOTS[bug.sectionId]
+      let next
+      do { next = Math.floor(Math.random() * spots.length) } while (next === bug.spotIdx)
+      bug.spotIdx = next
+      return getSpotVP(bug.sectionId, spots[next].xF, spots[next].yF)
+    }
 
     let last = null
     let raf
@@ -61,26 +92,42 @@ function FlyingLadybugs() {
       last = ts
 
       bugs.forEach(b => {
-        if (!b.ref.current) return
+        if (!b.ref.current || b.state === 'hidden') return
+        const el = b.ref.current
 
         if (b.state === 'resting') {
+          // Track section as user scrolls
+          const spots = SECTION_LEAF_SPOTS[b.sectionId]
+          const pos = getSpotVP(b.sectionId, spots[b.spotIdx].xF, spots[b.spotIdx].yF)
+          if (pos) { b.x = pos.x; b.y = pos.y }
+
           b.wingOpen = false
           b.wingTimer = 0
+          el.style.opacity = '0.5'
           b.restRemain -= dt
+
           if (b.restRemain <= 0) {
-            const dest = pickZone(b.zoneIdx)
-            b.target = dest
-            b.zoneIdx = dest.idx
-            b.state = 'flying'
-            b.wobblePhase = Math.random() * Math.PI * 2
-            b.speed = 55 + Math.random() * 55
+            const dest = pickNextSpot(b)
+            if (dest) {
+              b.target = dest
+              b.state = 'flying'
+              b.wobblePhase = Math.random() * Math.PI * 2
+              b.speed = 60 + Math.random() * 50
+            }
           }
         } else {
+          // Keep target position fresh as page scrolls
+          const spots = SECTION_LEAF_SPOTS[b.sectionId]
+          const fresh = getSpotVP(b.sectionId, spots[b.spotIdx].xF, spots[b.spotIdx].yF)
+          if (fresh) b.target = fresh
+
           const dx = b.target.x - b.x
           const dy = b.target.y - b.y
           const dist = Math.sqrt(dx * dx + dy * dy)
 
-          if (dist < 6) {
+          el.style.opacity = '0.5'
+
+          if (dist < 8) {
             b.x = b.target.x
             b.y = b.target.y
             b.vx = 0; b.vy = 0
@@ -99,16 +146,11 @@ function FlyingLadybugs() {
             b.y += b.vy * dt
             if (Math.hypot(b.vx, b.vy) > 2)
               b.angle = Math.atan2(b.vy, b.vx) * 180 / Math.PI + 90
-            // Wing flap at ~12fps
             b.wingTimer += dt
-            if (b.wingTimer > 0.08) {
-              b.wingTimer = 0
-              b.wingOpen = !b.wingOpen
-            }
+            if (b.wingTimer > 0.08) { b.wingTimer = 0; b.wingOpen = !b.wingOpen }
           }
         }
 
-        const el = b.ref.current
         el.style.left = (b.x - SIZE / 2) + 'px'
         el.style.top = (b.y - SIZE / 2) + 'px'
         el.style.transform = `rotate(${b.angle}deg)`
@@ -118,19 +160,11 @@ function FlyingLadybugs() {
       raf = requestAnimationFrame(tick)
     }
 
-    // Set initial positions
-    bugs.forEach(b => {
-      if (b.ref.current) {
-        b.ref.current.style.left = (b.x - SIZE / 2) + 'px'
-        b.ref.current.style.top = (b.y - SIZE / 2) + 'px'
-      }
-    })
-
     raf = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(raf)
+    return () => { cancelAnimationFrame(raf); observer.disconnect() }
   }, [])
 
-  const style = { position: 'fixed', width: 26, height: 26, pointerEvents: 'none', zIndex: 50, userSelect: 'none' }
+  const style = { position: 'fixed', width: 26, height: 26, pointerEvents: 'none', zIndex: 50, userSelect: 'none', opacity: 0 }
   return (
     <>
       <img ref={ref0} src="/bug2_closed_wings.png" alt="" aria-hidden="true" style={style} />
