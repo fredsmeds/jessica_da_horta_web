@@ -50,30 +50,26 @@ function FlyingLadybugs() {
       wingOpen: false,
     }))
 
-    // Hide all initially
-    refs.forEach(r => { if (r.current) r.current.style.opacity = '0' })
-
-    // Activate each bug when its section enters the viewport
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return
-        const bug = bugs.find(b => b.sectionId === entry.target.id)
-        if (!bug || bug.state !== 'hidden') return
-        const spots = SECTION_LEAF_SPOTS[bug.sectionId]
-        const pos = getSpotVP(bug.sectionId, spots[0].xF, spots[0].yF)
-        if (!pos) return
-        bug.x = pos.x
-        bug.y = pos.y
-        bug.spotIdx = 0
-        bug.state = 'resting'
-        bug.restRemain = 1.5 + Math.random() * 2
-      })
-    }, { threshold: 0.2 })
-
-    BUG_HOME.forEach(id => {
-      const el = document.getElementById(id)
-      if (el) observer.observe(el)
-    })
+    function tryActivate(b) {
+      const section = document.getElementById(b.sectionId)
+      if (!section) return
+      const r = section.getBoundingClientRect()
+      const vh = window.innerHeight
+      if (r.top > vh || r.bottom < 0) return // section not visible at all
+      const spots = SECTION_LEAF_SPOTS[b.sectionId]
+      // Pick first spot that falls within the current viewport
+      for (let i = 0; i < spots.length; i++) {
+        const pos = getSpotVP(b.sectionId, spots[i].xF, spots[i].yF)
+        if (pos && pos.y > 20 && pos.y < vh - 20) {
+          b.x = pos.x; b.y = pos.y; b.spotIdx = i
+          b.state = 'resting'; b.restRemain = 1 + Math.random() * 2
+          return
+        }
+      }
+      // Fallback: use first spot regardless
+      const pos = getSpotVP(b.sectionId, spots[0].xF, spots[0].yF)
+      if (pos) { b.x = pos.x; b.y = pos.y; b.spotIdx = 0; b.state = 'resting'; b.restRemain = 1 + Math.random() * 2 }
+    }
 
     function pickNextSpot(bug) {
       const spots = SECTION_LEAF_SPOTS[bug.sectionId]
@@ -92,7 +88,8 @@ function FlyingLadybugs() {
       last = ts
 
       bugs.forEach(b => {
-        if (!b.ref.current || b.state === 'hidden') return
+        if (!b.ref.current) return
+        if (b.state === 'hidden') { tryActivate(b); return }
         const el = b.ref.current
 
         if (b.state === 'resting') {
@@ -161,7 +158,7 @@ function FlyingLadybugs() {
     }
 
     raf = requestAnimationFrame(tick)
-    return () => { cancelAnimationFrame(raf); observer.disconnect() }
+    return () => cancelAnimationFrame(raf)
   }, [])
 
   const style = { position: 'fixed', width: 26, height: 26, pointerEvents: 'none', zIndex: 50, userSelect: 'none', opacity: 0 }
