@@ -13,10 +13,11 @@ import { useLanguage } from './i18n/index.jsx'
 // Positioned near edges where fondo botanical art is concentrated.
 const SECTION_LEAF_SPOTS = {
   about:    [{ xF: 0.06, yF: 0.30 }, { xF: 0.92, yF: 0.45 }, { xF: 0.05, yF: 0.68 }],
+  projects: [{ xF: 0.09, yF: 0.35 }, { xF: 0.90, yF: 0.55 }, { xF: 0.07, yF: 0.80 }],
   faq:      [{ xF: 0.08, yF: 0.28 }, { xF: 0.91, yF: 0.52 }, { xF: 0.06, yF: 0.78 }],
   schedule: [{ xF: 0.07, yF: 0.22 }, { xF: 0.93, yF: 0.44 }, { xF: 0.04, yF: 0.66 }],
 }
-const BUG_HOME = ['about', 'faq', 'schedule']
+const BUG_HOME = ['about', 'projects', 'faq', 'schedule']
 
 function getSpotVP(sectionId, xF, yF) {
   const el = document.getElementById(sectionId)
@@ -29,10 +30,11 @@ function FlyingLadybugs() {
   const ref0 = useRef(null)
   const ref1 = useRef(null)
   const ref2 = useRef(null)
+  const ref3 = useRef(null)
 
   useEffect(() => {
     const SIZE = 26
-    const refs = [ref0, ref1, ref2]
+    const refs = [ref0, ref1, ref2, ref3]
 
     const bugs = refs.map((ref, i) => ({
       ref,
@@ -79,6 +81,28 @@ function FlyingLadybugs() {
       return getSpotVP(bug.sectionId, spots[next].xF, spots[next].yF)
     }
 
+    function escapeBug(b) {
+      const spots = SECTION_LEAF_SPOTS[b.sectionId]
+      let bestIdx = -1, bestDist = -1
+      for (let i = 0; i < spots.length; i++) {
+        if (i === b.spotIdx) continue
+        const pos = getSpotVP(b.sectionId, spots[i].xF, spots[i].yF)
+        if (!pos) continue
+        const d = Math.hypot(pos.x - mouse.x, pos.y - mouse.y)
+        if (d > bestDist) { bestDist = d; bestIdx = i }
+      }
+      const idx = bestIdx !== -1 ? bestIdx : (b.spotIdx + 1) % spots.length
+      b.spotIdx = idx
+      b.target = getSpotVP(b.sectionId, spots[idx].xF, spots[idx].yF)
+      b.state = 'flying'
+      b.speed = 140 + Math.random() * 40
+      b.wobblePhase = Math.random() * Math.PI * 2
+    }
+
+    const mouse = { x: -999, y: -999 }
+    const onMouseMove = e => { mouse.x = e.clientX; mouse.y = e.clientY }
+    window.addEventListener('mousemove', onMouseMove)
+
     let last = null
     let raf
 
@@ -100,8 +124,9 @@ function FlyingLadybugs() {
 
           b.wingOpen = false
           b.wingTimer = 0
-          el.style.opacity = '0.5'
+          el.style.opacity = '0.55'
           b.restRemain -= dt
+          if (Math.hypot(b.x - mouse.x, b.y - mouse.y) < 55) { escapeBug(b); return }
 
           if (b.restRemain <= 0) {
             const dest = pickNextSpot(b)
@@ -122,7 +147,7 @@ function FlyingLadybugs() {
           const dy = b.target.y - b.y
           const dist = Math.sqrt(dx * dx + dy * dy)
 
-          el.style.opacity = '0.5'
+          el.style.opacity = '0.55'
 
           if (dist < 8) {
             b.x = b.target.x
@@ -158,7 +183,7 @@ function FlyingLadybugs() {
     }
 
     raf = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(raf)
+    return () => { cancelAnimationFrame(raf); window.removeEventListener('mousemove', onMouseMove) }
   }, [])
 
   const style = { position: 'fixed', width: 26, height: 26, pointerEvents: 'none', zIndex: 50, userSelect: 'none', opacity: 0 }
@@ -167,6 +192,7 @@ function FlyingLadybugs() {
       <img ref={ref0} src="/bug2_closed_wings.png" alt="" aria-hidden="true" style={style} />
       <img ref={ref1} src="/bug2_closed_wings.png" alt="" aria-hidden="true" style={style} />
       <img ref={ref2} src="/bug2_closed_wings.png" alt="" aria-hidden="true" style={style} />
+      <img ref={ref3} src="/bug2_closed_wings.png" alt="" aria-hidden="true" style={style} />
     </>
   )
 }
