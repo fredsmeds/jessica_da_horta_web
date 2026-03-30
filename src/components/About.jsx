@@ -1,6 +1,18 @@
 import { useState } from 'react'
 import { useLanguage } from '../i18n/index.jsx'
 
+const PORTRAITS = ['/portrait.webp', '/portrait2.webp', '/portrait.jpeg']
+
+function getSessionPortrait() {
+  const key = 'portrait'
+  let stored = sessionStorage.getItem(key)
+  if (!stored) {
+    stored = PORTRAITS[Math.floor(Math.random() * PORTRAITS.length)]
+    sessionStorage.setItem(key, stored)
+  }
+  return stored
+}
+
 function PlaceholderBlock({ icon, text }) {
   return (
     <div className="placeholder-block">
@@ -12,6 +24,7 @@ function PlaceholderBlock({ icon, text }) {
 
 export default function About() {
   const { t } = useLanguage()
+  const [portrait] = useState(getSessionPortrait)
   const [bioTab, setBioTab] = useState('early')
   const [extrasTab, setExtrasTab] = useState('cert')
 
@@ -19,6 +32,7 @@ export default function About() {
     { id: 'early', label: t.about.earlyLifeTitle },
     { id: 'career', label: t.about.careerTitle },
     { id: 'philosophy', label: t.about.philosophyTitle },
+    { id: 'services', label: t.about.servicesTitle },
   ]
 
   return (
@@ -37,7 +51,7 @@ export default function About() {
           <div className="about__portrait-col">
             <div className="about__portrait-frame">
               <img
-                src="/portrait.webp"
+                src={portrait}
                 alt={t.about.portraitAlt}
                 className="about__portrait"
               />
@@ -87,16 +101,9 @@ export default function About() {
                 </div>
               )}
               {bioTab === 'career' && (
-                <div className="about__timeline">
-                  {t.about.careerItems.map((item, i) => (
-                    <div key={i} className="about__tl-item">
-                      <div className="about__tl-period">{item.period}</div>
-                      <div className="about__tl-content">
-                        <div className="about__tl-role">{item.role}</div>
-                        <div className="about__tl-org">{item.org} · {item.location}</div>
-                        {item.desc && <p className="about__tl-desc">{item.desc}</p>}
-                      </div>
-                    </div>
+                <div>
+                  {t.about.careerText.map((para, i) => (
+                    <p key={i} className="about__para">{para}</p>
                   ))}
                 </div>
               )}
@@ -106,6 +113,13 @@ export default function About() {
                     <p key={i} className="about__para">{para}</p>
                   ))}
                 </div>
+              )}
+              {bioTab === 'services' && (
+                <ul className="about__services-list">
+                  {t.about.servicesList.map((item, i) => (
+                    <li key={i} className="about__services-item">{item}</li>
+                  ))}
+                </ul>
               )}
             </div>
           </div>
@@ -242,6 +256,7 @@ export default function About() {
           object-fit: cover;
           object-position: center top;
           transition: transform 0.6s ease;
+          opacity: 0.895;
         }
         .about__portrait-frame:hover .about__portrait {
           transform: scale(1.03);
@@ -312,6 +327,29 @@ export default function About() {
         }
         .about__para:last-child {
           margin-bottom: 0;
+        }
+        .about__services-list {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
+        .about__services-item {
+          font-size: 0.88rem;
+          line-height: 1.85;
+          color: var(--color-text-secondary);
+          padding: 0.65rem 0;
+          border-bottom: 1px solid var(--color-border-light);
+          padding-left: 1.1rem;
+          position: relative;
+        }
+        .about__services-item::before {
+          content: '–';
+          position: absolute;
+          left: 0;
+          color: var(--color-primary);
+        }
+        .about__services-item:first-child {
+          border-top: 1px solid var(--color-border-light);
         }
         .about__extras {
           margin-top: var(--spacing-md);

@@ -1,12 +1,12 @@
 import { useLanguage } from '../i18n/index.jsx'
 
 const placeholderProjects = [
-  { id: 1, category: 'Design', location: 'Lisboa', year: '2024' },
-  { id: 2, category: 'Consultoria', location: 'Cascais', year: '2024' },
-  { id: 3, category: 'Instalação', location: 'Setúbal', year: '2023' },
-  { id: 4, category: 'Design', location: 'Alentejo', year: '2023' },
-  { id: 5, category: 'Gestão', location: 'Sintra', year: '2024' },
-  { id: 6, category: 'Design', location: 'Algarve', year: '2025' },
+  { id: 1, category: 'Consultoria + Design', location: 'Lisboa', year: '2026' },
+  { id: 2, category: 'Design · Plano Geral · Jardim de Sequeiro', location: 'Caxias', year: '2019' },
+  { id: 3, category: 'Design · Jardim de Sequeiro', location: 'Loulé', year: '2023' },
+  { id: 4, category: 'Instalação · Jardim de Sequeiro', location: 'Loulé', year: '2024' },
+  { id: 5, category: 'Acompanhamento · Jardim de Sequeiro', location: 'Arruda dos Vinhos', year: '2025' },
+  { id: 6, category: 'Formação · Jardinagem de Sequeiro em Clima Mediterrânico', location: 'APEJECEM-MGAP', year: '' },
 ]
 
 export default function Projects() {
@@ -37,7 +37,7 @@ export default function Projects() {
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
                     <circle cx="12" cy="10" r="3"/>
                   </svg>
-                  {project.location} · {project.year}
+                  {project.location}{project.year ? ` · ${project.year}` : ''}
                 </span>
               </div>
             </div>
@@ -111,8 +111,6 @@ export default function Projects() {
         .projects__item-cat {
           font-size: 0.75rem;
           font-weight: var(--weight-medium);
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
           color: var(--color-primary);
         }
         .projects__item-loc {

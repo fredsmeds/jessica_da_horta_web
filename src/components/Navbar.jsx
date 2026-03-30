@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useLanguage } from '../i18n/index.jsx'
 
 export default function Navbar({ activeSection, onNavClick }) {
   const { lang, setLang, t } = useLanguage()
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40)
@@ -12,6 +14,7 @@ export default function Navbar({ activeSection, onNavClick }) {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  // Main page scroll items — blog and schedule are separate pages
   const navItems = [
     { id: 'home', label: t.nav.home },
     { id: 'about', label: t.nav.about },
@@ -24,6 +27,9 @@ export default function Navbar({ activeSection, onNavClick }) {
     onNavClick(id)
     setMenuOpen(false)
   }
+
+  const handleBlog = () => { navigate('/blog'); setMenuOpen(false) }
+  const handleSchedule = () => { navigate('/agendar'); setMenuOpen(false) }
 
   return (
     <nav className={`navbar${scrolled ? ' navbar--scrolled' : ''}${menuOpen ? ' navbar--open' : ''}`}>
@@ -47,6 +53,14 @@ export default function Navbar({ activeSection, onNavClick }) {
               </button>
             </li>
           ))}
+          <li>
+            <button
+              className={`navbar__link${activeSection === 'blog' ? ' navbar__link--active' : ''}`}
+              onClick={handleBlog}
+            >
+              {t.nav.blog}
+            </button>
+          </li>
         </ul>
 
         <div className="navbar__right">
@@ -64,7 +78,7 @@ export default function Navbar({ activeSection, onNavClick }) {
 
           <button
             className="navbar__cta"
-            onClick={() => handleClick('schedule')}
+            onClick={handleSchedule}
           >
             {t.nav.schedule}
           </button>
@@ -94,8 +108,16 @@ export default function Navbar({ activeSection, onNavClick }) {
           ))}
           <li>
             <button
+              className={`navbar__mobile-link${activeSection === 'blog' ? ' active' : ''}`}
+              onClick={handleBlog}
+            >
+              {t.nav.blog}
+            </button>
+          </li>
+          <li>
+            <button
               className="navbar__mobile-link navbar__mobile-cta"
-              onClick={() => handleClick('schedule')}
+              onClick={handleSchedule}
             >
               {t.nav.schedule}
             </button>
@@ -169,9 +191,11 @@ export default function Navbar({ activeSection, onNavClick }) {
           padding: 0.25rem 0;
           position: relative;
           transition: color var(--transition);
+          text-shadow: 0 1px 4px rgba(0,0,0,0.45);
         }
         .navbar--scrolled .navbar__link {
           color: var(--color-text);
+          text-shadow: none;
         }
         .navbar__link::after {
           content: '';

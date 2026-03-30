@@ -1,12 +1,14 @@
 import { useState, useEffect, useRef } from 'react'
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
 import Navbar from './components/Navbar.jsx'
 import Hero from './components/Hero.jsx'
 import About from './components/About.jsx'
 import Projects from './components/Projects.jsx'
 import FAQ from './components/FAQ.jsx'
 import Contact from './components/Contact.jsx'
-import ScheduleVisit from './components/ScheduleVisit.jsx'
 import Footer from './components/Footer.jsx'
+import BlogPage from './pages/BlogPage.jsx'
+import SchedulePage from './pages/SchedulePage.jsx'
 import { useLanguage } from './i18n/index.jsx'
 
 // Leaf landing spots per section, as fractions of each section's bounding rect.
@@ -253,10 +255,22 @@ function PrivacyModal({ onClose }) {
 
 const SECTIONS = ['home', 'about', 'projects', 'faq', 'contact', 'schedule']
 
-export default function App() {
+function MainPage() {
   const [activeSection, setActiveSection] = useState('home')
   const [showPrivacy, setShowPrivacy] = useState(false)
   const isScrollingTo = useRef(false)
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  // Scroll to section when arriving from a sub-page
+  useEffect(() => {
+    const id = location.state?.scrollTo
+    if (id) {
+      // clear state so back-navigation doesn't re-trigger
+      window.history.replaceState({}, '')
+      setTimeout(() => scrollToSection(id), 80)
+    }
+  }, [])
 
   // Track active section on scroll
   useEffect(() => {
@@ -305,7 +319,7 @@ export default function App() {
       />
 
       <main>
-        <Hero onScheduleClick={() => scrollToSection('schedule')} />
+        <Hero onScheduleClick={() => navigate('/agendar')} />
         <About />
         <div className="fondo4-band">
           <div className="fondo4-band__bg" />
@@ -313,8 +327,7 @@ export default function App() {
           <Projects />
           <FAQ />
         </div>
-        <Contact onScheduleClick={() => scrollToSection('schedule')} />
-        <ScheduleVisit />
+        <Contact onScheduleClick={() => navigate('/agendar')} />
       </main>
 
       <Footer
@@ -412,5 +425,15 @@ export default function App() {
         }
       `}</style>
     </>
+  )
+}
+
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<MainPage />} />
+      <Route path="/blog" element={<BlogPage />} />
+      <Route path="/agendar" element={<SchedulePage />} />
+    </Routes>
   )
 }
