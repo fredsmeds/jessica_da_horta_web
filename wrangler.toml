@@ -11,6 +11,11 @@ JESSICA_EMAIL = "contact@jessicadahorta.com"
 # Dashboard → Pages → jessicadhg-pais-agem → Settings → Environment variables
 # Add as a "Secret" (encrypted): RESEND_API_KEY = re_CwKRV8ZW_...
 
+[[d1_databases]]
+binding = "DB"
+database_name = "jdh-blog"
+database_id = "487520c1-e7dc-4168-bfad-b2696345ee9b"
+
 [[kv_namespaces]]
 binding = "LEADS_KV"
 id = "89b7819761e247d7b6b19c4cb8b070c6"
