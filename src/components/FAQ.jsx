@@ -46,7 +46,7 @@ export default function FAQ() {
               <h2 className="section-title">{t.faq.title}</h2>
             </div>
             <div className="faq__deco">
-              <img src="/plant_gif.webp" alt="" className="faq__deco-img" aria-hidden="true" />
+              <img src="/plant_gif.webp" alt="" className="faq__deco-img" aria-hidden="true" loading="lazy" />
             </div>
           </div>
 
