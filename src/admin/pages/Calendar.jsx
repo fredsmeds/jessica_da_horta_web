@@ -319,7 +319,7 @@ export default function Calendar() {
         }
       `}</style>
 
-      <div className="cal-wrap">
+      <div className="cal-wrap" data-v="2">
         <div className="cal-main">
           <div className="cal-header">
             <h2>Calendário</h2>
