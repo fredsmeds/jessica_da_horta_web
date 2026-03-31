@@ -37,10 +37,18 @@ function ToolbarBtn({ onClick, active, title, children }) {
   )
 }
 
+const LANGS = [
+  { id: 'pt', label: 'PT' },
+  { id: 'en', label: 'EN' },
+  { id: 'es', label: 'ES' },
+]
+
 export default function BlogEditor({ postId, onDone }) {
   const [categories, setCategories] = useState([])
-  const [title, setTitle] = useState('')
-  const [excerpt, setExcerpt] = useState('')
+  const [editorLang, setEditorLang] = useState('pt')
+  const [titles,   setTitles]   = useState({ pt: '', en: '', es: '' })
+  const [excerpts, setExcerpts] = useState({ pt: '', en: '', es: '' })
+  const [bodies,   setBodies]   = useState({ pt: '', en: '', es: '' })
   const [categoryId, setCategoryId] = useState('')
   const [status, setStatus] = useState('draft')
   const [coverImage, setCoverImage] = useState('')
@@ -48,6 +56,7 @@ export default function BlogEditor({ postId, onDone }) {
   const [error, setError] = useState('')
   const coverInputRef = useRef()
   const imgInputRef = useRef()
+  const switchingLang = useRef(false)
 
   const editor = useEditor({
     extensions: [
@@ -56,9 +65,13 @@ export default function BlogEditor({ postId, onDone }) {
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
       Image.configure({ inline: false, allowBase64: true }),
       Link.configure({ openOnClick: false }),
-      Placeholder.configure({ placeholder: 'Escreve o teu artigo aqui...' }),
+      Placeholder.configure({ placeholder: 'Escreve o conteúdo aqui...' }),
     ],
     content: '',
+    onUpdate: ({ editor: e }) => {
+      if (switchingLang.current) return
+      setBodies(prev => ({ ...prev, [editorLang]: e.getHTML() }))
+    },
   })
 
   useEffect(() => {
@@ -71,14 +84,27 @@ export default function BlogEditor({ postId, onDone }) {
     fetch(API(`/posts/${postId}`), { headers: { 'Authorization': `Bearer ${sessionStorage.getItem('jdh_admin_token')}` } })
       .then(r => r.json())
       .then(post => {
-        setTitle(post.title)
-        setExcerpt(post.excerpt || '')
+        setTitles({ pt: post.title || '', en: post.title_en || '', es: post.title_es || '' })
+        setExcerpts({ pt: post.excerpt || '', en: post.excerpt_en || '', es: post.excerpt_es || '' })
+        const b = { pt: post.body || '', en: post.body_en || '', es: post.body_es || '' }
+        setBodies(b)
         setCategoryId(post.category_id ? String(post.category_id) : '')
         setStatus(post.status)
         setCoverImage(post.cover_image || '')
-        editor.commands.setContent(post.body)
+        switchingLang.current = true
+        editor.commands.setContent(b.pt)
+        setTimeout(() => { switchingLang.current = false }, 50)
       })
   }, [postId, editor])
+
+  function switchLang(newLang) {
+    if (newLang === editorLang || !editor) return
+    switchingLang.current = true
+    setBodies(prev => ({ ...prev, [editorLang]: editor.getHTML() }))
+    setEditorLang(newLang)
+    editor.commands.setContent(bodies[newLang] || '')
+    setTimeout(() => { switchingLang.current = false }, 50)
+  }
 
   function handleCoverUpload(e) {
     const file = e.target.files[0]
@@ -105,14 +131,22 @@ export default function BlogEditor({ postId, onDone }) {
   }, [editor])
 
   async function handleSave(saveStatus) {
-    if (!title.trim()) { setError('O título é obrigatório.'); return }
+    if (!titles.pt.trim()) { setError('O título em PT é obrigatório.'); return }
     if (!editor) return
+    // Save current editor content before submitting
+    const currentBodies = { ...bodies, [editorLang]: editor.getHTML() }
     setSaving(true)
     setError('')
     const payload = {
-      title: title.trim(),
-      body: editor.getHTML(),
-      excerpt: excerpt.trim(),
+      title:      titles.pt.trim(),
+      body:       currentBodies.pt,
+      excerpt:    excerpts.pt.trim(),
+      title_en:   titles.en.trim(),
+      title_es:   titles.es.trim(),
+      excerpt_en: excerpts.en.trim(),
+      excerpt_es: excerpts.es.trim(),
+      body_en:    currentBodies.en,
+      body_es:    currentBodies.es,
       cover_image: coverImage,
       category_id: categoryId ? parseInt(categoryId) : null,
       status: saveStatus,
@@ -178,25 +212,25 @@ export default function BlogEditor({ postId, onDone }) {
         .blog-editor-error { color: #c0392b; font-size: 0.83rem; margin-top: 0.5rem; }
         .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
         @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
+        .lang-tabs { display: flex; gap: 4px; margin-bottom: 1.25rem; }
+        .lang-tab { padding: 0.35rem 1rem; border: 1px solid #ddd; border-radius: 3px; background: transparent; font-family: inherit; font-size: 0.8rem; font-weight: 600; cursor: pointer; color: #888; letter-spacing: 0.06em; }
+        .lang-tab:hover { background: #f0ede8; color: #555b37; }
+        .lang-tab.active { background: #555b37; color: #fff; border-color: #555b37; }
+        .lang-note { font-size: 0.72rem; color: #aaa; margin-bottom: 1rem; font-style: italic; }
       `}</style>
 
       <div className="blog-editor">
         <h2>{postId ? 'Editar Artigo' : 'Novo Artigo'}</h2>
 
-        <div className="blog-editor-field">
-          <label>Título *</label>
-          <input value={title} onChange={e => setTitle(e.target.value)} placeholder="Título do artigo" />
-        </div>
-
-        <div className="two-col">
-          <div className="blog-editor-field">
+        <div className="two-col" style={{ marginBottom: '1.25rem' }}>
+          <div className="blog-editor-field" style={{ marginBottom: 0 }}>
             <label>Categoria</label>
             <select value={categoryId} onChange={e => setCategoryId(e.target.value)}>
               <option value="">— sem categoria —</option>
               {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
           </div>
-          <div className="blog-editor-field">
+          <div className="blog-editor-field" style={{ marginBottom: 0 }}>
             <label>Estado</label>
             <select value={status} onChange={e => setStatus(e.target.value)}>
               <option value="draft">Rascunho</option>
@@ -206,8 +240,36 @@ export default function BlogEditor({ postId, onDone }) {
         </div>
 
         <div className="blog-editor-field">
-          <label>Excerto (resumo para listagem)</label>
-          <textarea value={excerpt} onChange={e => setExcerpt(e.target.value)} placeholder="Breve descrição que aparece na lista de artigos..." />
+          <label>Imagem de capa</label>
+          <input type="file" accept="image/*" ref={coverInputRef} onChange={handleCoverUpload} style={{ padding: '0.3rem 0' }} />
+          {coverImage && <img src={coverImage} alt="capa" className="cover-preview" />}
+        </div>
+
+        <div className="lang-tabs">
+          {LANGS.map(l => (
+            <button key={l.id} className={`lang-tab${editorLang === l.id ? ' active' : ''}`} onClick={() => switchLang(l.id)}>
+              {l.label}
+            </button>
+          ))}
+        </div>
+        {editorLang !== 'pt' && <p className="lang-note">Se deixar em branco, será mostrado o texto em PT no website.</p>}
+
+        <div className="blog-editor-field">
+          <label>Título {editorLang === 'pt' ? '*' : `(${editorLang.toUpperCase()})`}</label>
+          <input
+            value={titles[editorLang]}
+            onChange={e => setTitles(prev => ({ ...prev, [editorLang]: e.target.value }))}
+            placeholder="Título do artigo"
+          />
+        </div>
+
+        <div className="blog-editor-field">
+          <label>Excerto ({editorLang.toUpperCase()})</label>
+          <textarea
+            value={excerpts[editorLang]}
+            onChange={e => setExcerpts(prev => ({ ...prev, [editorLang]: e.target.value }))}
+            placeholder="Breve descrição que aparece na lista de artigos..."
+          />
         </div>
 
         <div className="blog-editor-field">

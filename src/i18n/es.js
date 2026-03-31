@@ -356,6 +356,13 @@ const es = {
     privacyLink: 'Política de Privacidad',
   },
 
+  // Album tags
+  albumTags: {
+    planning: 'Planificación',
+    before: 'Antes',
+    after: 'Después',
+  },
+
   footer: {
     tagline: 'Diseño de jardines mediterráneos con conciencia ecológica.',
     links: 'Enlaces',

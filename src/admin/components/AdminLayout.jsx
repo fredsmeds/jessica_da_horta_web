@@ -4,8 +4,19 @@ import Prices from '../pages/Prices.jsx'
 import Suppliers from '../pages/Suppliers.jsx'
 import Blog from '../pages/Blog.jsx'
 import Calendar from '../pages/Calendar.jsx'
+import Projects from '../pages/Projects.jsx'
 
 const NAV_ITEMS = [
+  {
+    id: 'projects',
+    label: 'Projetos',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+        <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+      </svg>
+    ),
+  },
   {
     id: 'calendar',
     label: 'Calendário',
@@ -71,6 +82,7 @@ export default function AdminLayout({ onLogout }) {
 
   function renderPage() {
     switch (activePage) {
+      case 'projects': return <Projects />
       case 'calendar': return <Calendar />
       case 'blog': return <Blog />
       case 'leads': return <Leads />
