@@ -46,7 +46,7 @@ export default function FAQ() {
               <h2 className="section-title">{t.faq.title}</h2>
             </div>
             <div className="faq__deco">
-              <img src="/leaves_eyes3.webp" alt="" className="faq__deco-img" aria-hidden="true" />
+              <img src="/plant_gif.webp" alt="" className="faq__deco-img" aria-hidden="true" />
             </div>
           </div>
 
@@ -94,6 +94,7 @@ export default function FAQ() {
           height: 100%;
           object-fit: cover;
           filter: grayscale(20%);
+          opacity: 0.8;
         }
         .faq__list-col {
           padding-top: 0.25rem;

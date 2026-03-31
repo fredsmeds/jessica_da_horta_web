@@ -273,12 +273,6 @@ export default function BlogEditor({ postId, onDone }) {
         </div>
 
         <div className="blog-editor-field">
-          <label>Imagem de capa</label>
-          <input type="file" accept="image/*" ref={coverInputRef} onChange={handleCoverUpload} style={{ padding: '0.3rem 0' }} />
-          {coverImage && <img src={coverImage} alt="capa" className="cover-preview" />}
-        </div>
-
-        <div className="blog-editor-field">
           <label>Conteúdo *</label>
           <div className="tiptap-toolbar">
             <ToolbarBtn onClick={() => editor.chain().focus().toggleBold().run()} active={editor.isActive('bold')} title="Negrito">B</ToolbarBtn>

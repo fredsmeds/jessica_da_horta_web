@@ -69,6 +69,7 @@ const pt = {
     pressItems: [
       { type: 'article', title: 'Redescoberta da Jardinagem em Clima Mediterrânico', outlet: 'Jardins', year: '', url: 'https://mgaportugal.org/redescoberta-da-jardinagem-em-clima-mediterranico' },
       { type: 'article', title: 'Criar um Jardim de Sequeiro Mediterrânico: Passos e Princípios', outlet: 'Revista APH, Nº 141', year: '2021', url: 'https://www.mgaportugal.org/revista_aph_141_p40-43.pdf' },
+      { type: 'article', title: 'Primeira Bolsa de Formação MGAP — Porto Urban Greening Biennial', outlet: 'MGAP', year: '2024', url: 'https://mgaportugal.org/news-events/news/first-mgap-training-bursary' },
       { type: 'talk', title: 'Adaptar os Espaços Verdes à Transição Climática', outlet: 'Lisboa E-Nova / CIUL, Lisboa', year: '2026', url: 'https://lisboaenova.org/adaptar-os-espacos-verdes-a-transicao-climatica/' },
       { type: 'talk', title: 'Jardins Mediterrânicos de Sequeiro: Semeando Beleza ao Ritmo da Natureza', outlet: 'LNEC / Iniciativa FCCN + Sustentável, Lisboa', year: '2025', url: 'https://mgaportugal.org/news-events/news/mgap-in-lisbon-and-beira' },
       { type: 'talk', title: 'Workshop Jardins Xerófitos', outlet: 'Câmara Municipal de Mértola', year: '2025', url: 'https://mgaportugal.org/news-events/news/Workshops-Jardins' },
@@ -371,6 +372,16 @@ const pt = {
 
     privacyText: 'Li e aceito a',
     privacyLink: 'Política de Privacidade',
+  },
+
+  // Project categories
+  projectCategories: {
+    1: 'Consultoria + Design',
+    2: 'Design · Plano Geral · Jardim de Sequeiro',
+    3: 'Design · Jardim de Sequeiro',
+    4: 'Instalação · Jardim de Sequeiro',
+    5: 'Acompanhamento · Jardim de Sequeiro',
+    6: 'Formação · Jardinagem de Sequeiro em Clima Mediterrânico',
   },
 
   // Album tags

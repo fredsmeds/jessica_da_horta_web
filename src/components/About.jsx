@@ -117,7 +117,10 @@ export default function About() {
               {bioTab === 'services' && (
                 <ul className="about__services-list">
                   {t.about.servicesList.map((item, i) => (
-                    <li key={i} className="about__services-item">{item}</li>
+                    <li key={i} className="about__services-item">
+                      <img src={`/bullet${i + 1}.png`} alt="" className="about__services-bullet" aria-hidden="true" />
+                      {item}
+                    </li>
                   ))}
                 </ul>
               )}
@@ -339,14 +342,16 @@ export default function About() {
           color: var(--color-text-secondary);
           padding: 0.65rem 0;
           border-bottom: 1px solid var(--color-border-light);
-          padding-left: 1.1rem;
-          position: relative;
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
         }
-        .about__services-item::before {
-          content: '–';
-          position: absolute;
-          left: 0;
-          color: var(--color-primary);
+        .about__services-bullet {
+          width: 32px;
+          height: 32px;
+          object-fit: contain;
+          flex-shrink: 0;
+          opacity: 0.9;
         }
         .about__services-item:first-child {
           border-top: 1px solid var(--color-border-light);

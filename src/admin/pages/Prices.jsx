@@ -1,9 +1,13 @@
 import { useState, useEffect, useRef } from 'react'
 
 const DEFAULT_PRICES = [
-  { id: 'visit', service: 'Visita Técnica Inicial', price: 90, unit: 'base + €0.40/km', notes: 'Deduzida do projeto' },
-  { id: '1A', service: '1A — Consultoria Simples', price: 200, unit: 'sessão', notes: '' },
-  { id: '1B', service: '1B — Consultoria Avançada', price: 450, unit: 'projeto', notes: '' },
+  { id: 'visit', service: 'Visita Técnica', price: 90, unit: 'base + €0.50/km (>50km)', notes: 'Deduzida do projeto' },
+  { id: '1_part', service: '1 — Consultoria Inicial · Particulares', price: 1250, unit: 'projeto', notes: 'Fase 1 completa' },
+  { id: '1_emp', service: '1 — Consultoria Inicial · Empresas', price: 1750, unit: 'projeto', notes: 'Fase 1 completa' },
+  { id: '1_ong', service: '1 — Consultoria Inicial · ONGs', price: 875, unit: 'projeto', notes: '-30% · Fase 1 completa' },
+  { id: '1b_diag', service: '1B — Diagnóstico Inicial Terreno', price: 650, unit: 'análise', notes: '≤2.500m²' },
+  { id: '1b_conf', service: '1B — Consultoria Conformidade Completa', price: 1100, unit: 'projeto', notes: '' },
+  { id: '1b_acomp', service: '1B — Acompanhamento Anual', price: 1800, unit: 'ano', notes: '' },
   { id: '2A', service: '2A — Design Simples de Jardim', price: 1200, unit: 'projeto', notes: '' },
   { id: '2B', service: '2B — Projeto Completo com Partes Técnicas', price: 1200, unit: 'projeto', notes: '' },
   { id: '2C', service: '2C — Licenciamento Municipal', price: 600, unit: 'projeto', notes: '' },
