@@ -3,6 +3,8 @@ import { useLanguage } from '../i18n/index.jsx'
 import { generateClientPdf, generateJessicaPdf } from '../utils/generatePdf.js'
 
 const TOTAL_STEPS = 9
+const STORAGE_KEY = 'jdh_schedule_v1'
+const FILE_FIELDS = new Set(['topoFile', 'constructionImages', 'rainwaterImage', 'interventionImages'])
 const JESSICA_LAT = 38.71605105146495
 const JESSICA_LNG = -9.415024799281479
 const MAX_FILE_BYTES = 25 * 1024 * 1024
@@ -545,6 +547,25 @@ function PrivacyModal({ t, onClose }) {
   )
 }
 
+// ── Progress persistence ──────────────────────────────────────────────────────
+
+function loadSaved() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    return raw ? JSON.parse(raw) : null
+  } catch { return null }
+}
+
+function saveProgress(data, step) {
+  try {
+    const toSave = { __step: step }
+    for (const [k, v] of Object.entries(data)) {
+      if (!FILE_FIELDS.has(k)) toSave[k] = v
+    }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave))
+  } catch {}
+}
+
 // ── Initial data ──────────────────────────────────────────────────────────────
 
 const initialData = {
@@ -578,13 +599,23 @@ const initialData = {
 
 export default function ScheduleVisit() {
   const { t } = useLanguage()
-  const [step, setStep] = useState(1)
-  const [data, setData] = useState(initialData)
+  const [step, setStep] = useState(() => loadSaved()?.__step || 1)
+  const [data, setData] = useState(() => {
+    const saved = loadSaved()
+    if (!saved) return initialData
+    const { __step, ...fields } = saved
+    return { ...initialData, ...fields }
+  })
   const [status, setStatus] = useState(null)
   const [showPrivacy, setShowPrivacy] = useState(false)
   const [stepError, setStepError] = useState('')
+  const hasSavedProgress = !!loadSaved()
 
-  const set = (key, val) => setData(prev => ({ ...prev, [key]: val }))
+  const set = (key, val) => setData(prev => {
+    const next = { ...prev, [key]: val }
+    saveProgress(next, step)
+    return next
+  })
 
   const stepLabel = t.schedule.stepOf.replace('{current}', step).replace('{total}', TOTAL_STEPS)
 
@@ -594,9 +625,27 @@ export default function ScheduleVisit() {
       return
     }
     setStepError('')
-    if (step < TOTAL_STEPS) setStep(s => s + 1)
+    if (step < TOTAL_STEPS) {
+      const next = step + 1
+      setStep(next)
+      saveProgress(data, next)
+    }
   }
-  const handlePrev = () => { setStepError(''); if (step > 1) setStep(s => s - 1) }
+  const handlePrev = () => {
+    setStepError('')
+    if (step > 1) {
+      const prev = step - 1
+      setStep(prev)
+      saveProgress(data, prev)
+    }
+  }
+
+  const handleRestart = () => {
+    localStorage.removeItem(STORAGE_KEY)
+    setData(initialData)
+    setStep(1)
+    setStepError('')
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -625,16 +674,20 @@ export default function ScheduleVisit() {
         ...(data.interventionImages || []).map(f => ({ name: f.name, data: f.data, type: f.type })),
       ]
 
+      // Strip file fields from the body — they're already in attachments above
+      const { topoFile, constructionImages, rainwaterImage, interventionImages, ...textData } = data
+
       const res = await fetch('/api/schedule', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, clientPdfBase64, jessicaPdfBase64, attachments }),
+        body: JSON.stringify({ ...textData, clientPdfBase64, jessicaPdfBase64, attachments }),
       })
       if (!res.ok) {
         const body = await res.json().catch(() => ({}))
         console.error('Schedule API error:', res.status, body)
         throw new Error(`API ${res.status}`)
       }
+      localStorage.removeItem(STORAGE_KEY)
       setStatus('success')
     } catch (sendErr) {
       console.error('Form send error:', sendErr)
@@ -692,6 +745,13 @@ export default function ScheduleVisit() {
               <span className="sv__step-counter">{stepLabel}</span>
               <h3 className="sv__step-title">{stepTitles[step - 1]}</h3>
             </div>
+
+            {hasSavedProgress && status === null && (
+              <div className="sv-progress-notice">
+                <span>O seu progresso foi guardado automaticamente.</span>
+                <button type="button" className="sv-progress-restart" onClick={handleRestart}>Começar de novo</button>
+              </div>
+            )}
 
             {status === 'error' && <div className="alert alert-error">{s.errorText}</div>}
             {status === 'pdfError' && <div className="alert alert-error">Ocorreu um erro ao gerar o documento PDF. Por favor tente novamente.</div>}
@@ -815,6 +875,17 @@ const svStyles = `
   .sv-step--done .sv-step__label { color: var(--color-primary); }
   .sv__form-area { background: rgba(255, 255, 255, 0.30); padding: var(--spacing-md); }
   .sv__form-header { margin-bottom: var(--spacing-md); padding-bottom: 1rem; border-bottom: 1px solid var(--color-border); }
+  .sv-progress-notice {
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    background: rgba(85,91,55,0.08); border-left: 3px solid var(--color-primary);
+    padding: 0.6rem 0.9rem; margin-bottom: 1rem; font-size: 0.82rem; color: var(--color-text-secondary);
+  }
+  .sv-progress-restart {
+    background: none; border: 1px solid var(--color-border); padding: 0.25rem 0.6rem;
+    font-size: 0.75rem; font-family: inherit; cursor: pointer; color: var(--color-text-secondary);
+    white-space: nowrap; transition: border-color 0.15s, color 0.15s;
+  }
+  .sv-progress-restart:hover { border-color: var(--color-primary); color: var(--color-primary); }
   .sv__step-counter {
     font-size: 0.72rem; font-weight: var(--weight-medium); letter-spacing: 0.12em;
     text-transform: uppercase; color: var(--color-primary); display: block; margin-bottom: 0.4rem;

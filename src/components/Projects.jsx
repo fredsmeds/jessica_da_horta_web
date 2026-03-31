@@ -276,8 +276,8 @@ export default function Projects() {
         }
         .projects__item-meta {
           display: flex;
-          justify-content: space-between;
-          align-items: center;
+          flex-direction: column;
+          gap: 0.2rem;
           padding: 0.75rem 0;
           border-bottom: 1px solid var(--color-border-light);
         }
@@ -291,6 +291,21 @@ export default function Projects() {
           color: var(--color-text-secondary);
           display: flex;
           align-items: center;
+        }
+        /* 1 & 4: left */
+        .projects__item:nth-child(1) .projects__item-meta,
+        .projects__item:nth-child(4) .projects__item-meta {
+          align-items: flex-start;
+        }
+        /* 2 & 5: center */
+        .projects__item:nth-child(2) .projects__item-meta,
+        .projects__item:nth-child(5) .projects__item-meta {
+          align-items: center;
+        }
+        /* 3 & 6: right */
+        .projects__item:nth-child(3) .projects__item-meta,
+        .projects__item:nth-child(6) .projects__item-meta {
+          align-items: flex-end;
         }
 
         /* Album overlay */

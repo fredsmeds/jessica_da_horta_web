@@ -263,35 +263,7 @@ async function buildPdf(data, forJessica = false) {
     y += 3
   }
 
-  // ── Images appendix ──────────────────────────────────────
-  const imageFiles = [
-    ...(data.topoFile?.type?.startsWith('image/') ? [data.topoFile] : []),
-    ...(data.constructionImages || []).filter(f => f?.type?.startsWith('image/')),
-    ...(data.rainwaterImage?.type?.startsWith('image/') ? [data.rainwaterImage] : []),
-    ...(data.interventionImages || []).filter(f => f?.type?.startsWith('image/')),
-  ]
-
-  if (imageFiles.length > 0) {
-    doc.addPage()
-    y = 20
-    drawSection('Fotografias Anexadas')
-    for (const f of imageFiles) {
-      try {
-        const png = await toCanvasPng(f.data)
-        if (!png) continue
-        const props = doc.getImageProperties(png)
-        const maxW = CW, maxH = 110
-        let iW = maxW, iH = (props.height / props.width) * maxW
-        if (iH > maxH) { iW = (maxW / iH) * maxW * (maxH / iH); iH = maxH }
-        checkPage(iH + 10)
-        doc.addImage(png, 'PNG', M, y, iW, iH)
-        doc.setFontSize(7)
-        doc.setTextColor(140, 140, 132)
-        doc.text(f.name, M, y + iH + 4)
-        y += iH + 10
-      } catch { /* skip unrenderable files */ }
-    }
-  }
+  // Images are sent as separate email attachments — not embedded in the PDF
 
   // ── Footer on every page ─────────────────────────────────
   const pages = doc.getNumberOfPages()
