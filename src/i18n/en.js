@@ -355,6 +355,13 @@ const en = {
     privacyLink: 'Privacy Policy',
   },
 
+  // Album tags
+  albumTags: {
+    planning: 'Planning',
+    before: 'Before',
+    after: 'After',
+  },
+
   footer: {
     tagline: 'Mediterranean landscape design with ecological awareness.',
     links: 'Links',

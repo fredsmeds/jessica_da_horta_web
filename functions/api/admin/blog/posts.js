@@ -31,23 +31,25 @@ export async function onRequest(context) {
 
   if (request.method === 'POST') {
     const data = await request.json()
-    const { title, body, excerpt, cover_image, category_id, status } = data
+    const { title, body, excerpt, cover_image, category_id, status,
+            title_en = '', title_es = '', excerpt_en = '', excerpt_es = '', body_en = '', body_es = '' } = data
 
     if (!title || !body) {
       return new Response(JSON.stringify({ error: 'title and body required' }), { status: 400, headers: { 'Content-Type': 'application/json' } })
     }
 
     let slug = slugify(title)
-    // ensure slug uniqueness
     const existing = await env.DB.prepare('SELECT id FROM posts WHERE slug = ?').bind(slug).first()
     if (existing) slug = `${slug}-${Date.now()}`
 
     const published_at = status === 'published' ? new Date().toISOString() : null
 
     const result = await env.DB.prepare(`
-      INSERT INTO posts (slug, title, body, excerpt, cover_image, category_id, status, published_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `).bind(slug, title, body, excerpt || '', cover_image || '', category_id || null, status || 'draft', published_at).run()
+      INSERT INTO posts (slug, title, body, excerpt, cover_image, category_id, status, published_at,
+                         title_en, title_es, excerpt_en, excerpt_es, body_en, body_es)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).bind(slug, title, body, excerpt || '', cover_image || '', category_id || null, status || 'draft', published_at,
+            title_en, title_es, excerpt_en, excerpt_es, body_en, body_es).run()
 
     return new Response(JSON.stringify({ id: result.meta.last_row_id, slug }), { status: 201, headers: { 'Content-Type': 'application/json' } })
   }

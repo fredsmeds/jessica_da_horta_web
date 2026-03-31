@@ -25,7 +25,8 @@ export async function onRequest(context) {
 
   if (request.method === 'PUT') {
     const data = await request.json()
-    const { title, body, excerpt, cover_image, category_id, status } = data
+    const { title, body, excerpt, cover_image, category_id, status,
+            title_en = '', title_es = '', excerpt_en = '', excerpt_es = '', body_en = '', body_es = '' } = data
 
     const current = await env.DB.prepare('SELECT status, published_at FROM posts WHERE id = ?').bind(id).first()
     if (!current) return new Response(JSON.stringify({ error: 'Not found' }), { status: 404, headers: { 'Content-Type': 'application/json' } })
@@ -35,9 +36,11 @@ export async function onRequest(context) {
       : current.published_at
 
     await env.DB.prepare(`
-      UPDATE posts SET title=?, body=?, excerpt=?, cover_image=?, category_id=?, status=?, published_at=?, updated_at=datetime('now')
+      UPDATE posts SET title=?, body=?, excerpt=?, cover_image=?, category_id=?, status=?, published_at=?, updated_at=datetime('now'),
+                       title_en=?, title_es=?, excerpt_en=?, excerpt_es=?, body_en=?, body_es=?
       WHERE id=?
-    `).bind(title, body, excerpt || '', cover_image || '', category_id || null, status || 'draft', published_at, id).run()
+    `).bind(title, body, excerpt || '', cover_image || '', category_id || null, status || 'draft', published_at,
+            title_en, title_es, excerpt_en, excerpt_es, body_en, body_es, id).run()
 
     return new Response(JSON.stringify({ ok: true }), { headers: { 'Content-Type': 'application/json' } })
   }

@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { useLanguage } from '../i18n/index.jsx'
 
-const PORTRAITS = ['/portrait.webp', '/portrait2.webp', '/portrait.jpeg']
+const PORTRAITS = ['/portrait.webp', '/portrait2.webp']
 
 function getSessionPortrait() {
   const key = 'portrait'
   let stored = sessionStorage.getItem(key)
-  if (!stored) {
+  if (!stored || !PORTRAITS.includes(stored)) {
     stored = PORTRAITS[Math.floor(Math.random() * PORTRAITS.length)]
     sessionStorage.setItem(key, stored)
   }

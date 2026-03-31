@@ -373,6 +373,13 @@ const pt = {
     privacyLink: 'Política de Privacidade',
   },
 
+  // Album tags
+  albumTags: {
+    planning: 'Planeamento',
+    before: 'Antes',
+    after: 'Depois',
+  },
+
   // Footer
   footer: {
     tagline: 'Paisagismo mediterrânico com consciência ecológica.',

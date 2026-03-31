@@ -65,7 +65,7 @@ function PostModal({ post, onClose }) {
 }
 
 export default function Blog() {
-  const { t } = useLanguage()
+  const { t, lang } = useLanguage()
   const [posts, setPosts] = useState([])
   const [categories, setCategories] = useState([])
   const [activeCategory, setActiveCategory] = useState(null)
@@ -79,13 +79,17 @@ export default function Blog() {
 
   useEffect(() => {
     setLoading(true)
-    const url = activeCategory ? `/api/blog/posts?category=${activeCategory}` : '/api/blog/posts'
-    fetch(url).then(r => r.json()).then(data => { setPosts(Array.isArray(data) ? data : []); setLoading(false) }).catch(() => setLoading(false))
-  }, [activeCategory])
+    const params = new URLSearchParams({ lang })
+    if (activeCategory) params.set('category', activeCategory)
+    fetch(`/api/blog/posts?${params}`)
+      .then(r => r.json())
+      .then(data => { setPosts(Array.isArray(data) ? data : []); setLoading(false) })
+      .catch(() => setLoading(false))
+  }, [activeCategory, lang])
 
   function openFullPost(slug) {
     setLoadingPost(true)
-    fetch(`/api/blog/posts/${slug}`)
+    fetch(`/api/blog/posts/${slug}?lang=${lang}`)
       .then(r => r.json())
       .then(post => { setOpenPost(post); setLoadingPost(false) })
       .catch(() => setLoadingPost(false))
