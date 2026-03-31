@@ -22,9 +22,15 @@ function PlaceholderBlock({ icon, text }) {
   )
 }
 
+function usePortrait() {
+  const [isMobile] = useState(() => window.innerWidth <= 768)
+  const [portrait] = useState(() => isMobile ? '/portrait2.webp' : getSessionPortrait())
+  return portrait
+}
+
 export default function About() {
   const { t } = useLanguage()
-  const [portrait] = useState(getSessionPortrait)
+  const portrait = usePortrait()
   const [bioTab, setBioTab] = useState('early')
   const [extrasTab, setExtrasTab] = useState('cert')
 

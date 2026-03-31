@@ -96,7 +96,7 @@ export default function Blog() {
   }
 
   return (
-    <section id="blog" className="blog section" style={{ backgroundImage: 'url(/1.10.webp)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }}>
+    <section id="blog" className="blog section blog--bg">
       <div className="container">
         <div className="blog__header">
           <p className="section-label">{t.blog.sectionLabel}</p>
@@ -163,6 +163,15 @@ export default function Blog() {
       {openPost && <PostModal post={openPost} onClose={() => setOpenPost(null)} />}
 
       <style>{`
+        .blog--bg {
+          background-image: url(/1.10.webp);
+          background-size: cover;
+          background-position: center;
+          background-attachment: fixed;
+        }
+        @media (max-width: 768px) {
+          .blog--bg { background-attachment: scroll; }
+        }
         .blog__header {
           background: rgba(255,255,255,0.30);
           padding: 1.5rem;
