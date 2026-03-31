@@ -186,7 +186,7 @@ export default function Projects() {
               onClick={ALBUMS[project.id] ? () => setOpenAlbum(project) : undefined}
             >
               <div className="projects__item-img">
-                <img src={project.img} alt={`${t.projects.comingSoon} ${project.id}`} />
+                <img src={project.img} alt={`${t.projects.comingSoon} ${project.id}`} loading="lazy" />
                 <div className="projects__item-overlay">
                   <span>{ALBUMS[project.id] ? 'Ver Álbum' : t.projects.comingSoon}</span>
                 </div>

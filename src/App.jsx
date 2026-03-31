@@ -1,16 +1,17 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, lazy, Suspense } from 'react'
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
 import Navbar from './components/Navbar.jsx'
 import Hero from './components/Hero.jsx'
-import About from './components/About.jsx'
-import Projects from './components/Projects.jsx'
-import FAQ from './components/FAQ.jsx'
-import Contact from './components/Contact.jsx'
 import Footer from './components/Footer.jsx'
 import FakeCursor from './components/FakeCursor.jsx'
-import BlogPage from './pages/BlogPage.jsx'
-import SchedulePage from './pages/SchedulePage.jsx'
 import { useLanguage } from './i18n/index.jsx'
+
+const About = lazy(() => import('./components/About.jsx'))
+const Projects = lazy(() => import('./components/Projects.jsx'))
+const FAQ = lazy(() => import('./components/FAQ.jsx'))
+const Contact = lazy(() => import('./components/Contact.jsx'))
+const BlogPage = lazy(() => import('./pages/BlogPage.jsx'))
+const SchedulePage = lazy(() => import('./pages/SchedulePage.jsx'))
 
 // Leaf landing spots per section, as fractions of each section's bounding rect.
 // Positioned near edges where fondo botanical art is concentrated.
@@ -287,14 +288,16 @@ function MainPage() {
 
       <main>
         <Hero onScheduleClick={() => navigate('/agendar')} />
-        <About />
-        <div className="fondo4-band">
-          <div className="fondo4-band__bg" />
-          <img src="/plant5.webp" alt="" aria-hidden="true" className="fondo4-bg-plant" />
-          <Projects />
-          <FAQ />
-        </div>
-        <Contact onScheduleClick={() => navigate('/agendar')} />
+        <Suspense fallback={null}>
+          <About />
+          <div className="fondo4-band">
+            <div className="fondo4-band__bg" />
+            <img src="/plant5.webp" alt="" aria-hidden="true" className="fondo4-bg-plant" />
+            <Projects />
+            <FAQ />
+          </div>
+          <Contact onScheduleClick={() => navigate('/agendar')} />
+        </Suspense>
       </main>
 
       <Footer
@@ -397,10 +400,12 @@ function MainPage() {
 
 export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<MainPage />} />
-      <Route path="/blog" element={<BlogPage />} />
-      <Route path="/agendar" element={<SchedulePage />} />
-    </Routes>
+    <Suspense fallback={null}>
+      <Routes>
+        <Route path="/" element={<MainPage />} />
+        <Route path="/blog" element={<BlogPage />} />
+        <Route path="/agendar" element={<SchedulePage />} />
+      </Routes>
+    </Suspense>
   )
 }

@@ -12,6 +12,11 @@ export default defineConfig({
         main: 'index.html',
         admin: 'admin.html',
       },
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+        },
+      },
     },
   },
 })
