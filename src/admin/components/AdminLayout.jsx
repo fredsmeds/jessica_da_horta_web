@@ -3,8 +3,21 @@ import Leads from '../pages/Leads.jsx'
 import Prices from '../pages/Prices.jsx'
 import Suppliers from '../pages/Suppliers.jsx'
 import Blog from '../pages/Blog.jsx'
+import Calendar from '../pages/Calendar.jsx'
 
 const NAV_ITEMS = [
+  {
+    id: 'calendar',
+    label: 'Calendário',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+        <line x1="16" y1="2" x2="16" y2="6"/>
+        <line x1="8" y1="2" x2="8" y2="6"/>
+        <line x1="3" y1="10" x2="21" y2="10"/>
+      </svg>
+    ),
+  },
   {
     id: 'blog',
     label: 'Blog',
@@ -53,16 +66,17 @@ const NAV_ITEMS = [
 ]
 
 export default function AdminLayout({ onLogout }) {
-  const [activePage, setActivePage] = useState('blog')
+  const [activePage, setActivePage] = useState('calendar')
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   function renderPage() {
     switch (activePage) {
+      case 'calendar': return <Calendar />
       case 'blog': return <Blog />
       case 'leads': return <Leads />
       case 'prices': return <Prices />
       case 'suppliers': return <Suppliers />
-      default: return <Blog />
+      default: return <Calendar />
     }
   }
 
