@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar.jsx'
 import ScheduleVisit from '../components/ScheduleVisit.jsx'
 import Footer from '../components/Footer.jsx'
+import FakeCursor from '../components/FakeCursor.jsx'
 
 export default function SchedulePage() {
   const navigate = useNavigate()
@@ -22,6 +23,7 @@ export default function SchedulePage() {
         <ScheduleVisit />
       </main>
       <Footer onNavClick={handleNavClick} onPrivacyClick={() => {}} />
+      <FakeCursor />
     </>
   )
 }

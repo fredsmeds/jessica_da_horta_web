@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar.jsx'
 import Blog from '../components/Blog.jsx'
 import Footer from '../components/Footer.jsx'
+import FakeCursor from '../components/FakeCursor.jsx'
 
 export default function BlogPage() {
   const navigate = useNavigate()
@@ -26,6 +27,7 @@ export default function BlogPage() {
         <Blog />
       </main>
       <Footer onNavClick={handleNavClick} onPrivacyClick={() => {}} />
+      <FakeCursor />
     </>
   )
 }
