@@ -2,12 +2,26 @@ import { useState, useEffect, useCallback } from 'react'
 import { useLanguage } from '../i18n/index.jsx'
 
 const placeholderProjects = [
-  { id: 1, img: '/gif1.webp', category: 'Consultoria + Design', location: 'Lisboa', year: '2026' },
-  { id: 2, img: '/sketch2.webp', category: 'Design · Plano Geral · Jardim de Sequeiro', location: 'Caxias', year: '2019' },
-  { id: 3, img: '/gif3.webp', category: 'Design · Jardim de Sequeiro', location: 'Loulé', year: '2023' },
-  { id: 4, img: '/sketch4.webp', category: 'Instalação · Jardim de Sequeiro', location: 'Loulé', year: '2024' },
-  { id: 5, img: '/gif5.webp', category: 'Acompanhamento · Jardim de Sequeiro', location: 'Arruda dos Vinhos', year: '2025' },
-  { id: 6, img: '/sketch6.webp', category: 'Formação · Jardinagem de Sequeiro em Clima Mediterrânico', location: 'APEJECEM-MGAP', year: '' },
+  { id: 1, img: '/gif1.webp', location: 'Lisboa', year: '2026' },
+  { id: 2, img: '/gif2.webp', location: 'Caxias', year: '2019' },
+  { id: 3, img: '/gif3.webp', location: 'Loulé', year: '2023' },
+  { id: 4, img: '/gif4.webp', location: 'Loulé', year: '2024' },
+  { id: 5, img: '/gif5.webp', location: 'Arruda dos Vinhos', year: '2025' },
+  { id: 6, img: '/gif6.webp', location: 'APEJECEM-MGAP', year: '' },
+]
+
+const ALBUM_1 = [
+  { src: '/1.0.webp'  },
+  { src: '/1.1.webp'  },
+  { src: '/1.2.webp'  },
+  { src: '/1.3.webp'  },
+  { src: '/1.4.webp'  },
+  { src: '/1.5.webp'  },
+  { src: '/1.6.webp'  },
+  { src: '/1.7.webp'  },
+  { src: '/1.8.webp'  },
+  { src: '/1.9.webp'  },
+  { src: '/1.10.webp' },
 ]
 
 const ALBUM_3 = [
@@ -21,7 +35,7 @@ const ALBUM_3 = [
   { src: '/3.8.webp',  tagKey: 'after' },
   { src: '/3.9.webp',  tagKey: 'after' },
   { src: '/3.10.webp', tagKey: 'after' },
-  { src: '/3.11.webp', tagKey: 'after' },
+  { src: '/3.14.webp', tagKey: 'after' },
   { src: '/3.12.webp', tagKey: 'after' },
   { src: '/3.13.webp', tagKey: 'after' },
 ]
@@ -38,6 +52,26 @@ const ALBUM_5 = [
   { src: '/5.9.webp',  tagKey: 'after' },
   { src: '/5.10.webp', tagKey: 'after' },
   { src: '/5.11.webp', tagKey: 'after' },
+]
+
+const ALBUM_6 = [
+  { src: '/6.1.webp' },
+  { src: '/6.2.webp' },
+  { src: '/6.3.webp' },
+  { src: '/6.4.webp' },
+  { src: '/6.5.webp' },
+  { src: '/6.6.webp' },
+]
+
+const ALBUM_4 = [
+  { src: '/4.1.webp' },
+  { src: '/4.2.webp' },
+  { src: '/4.3.webp' },
+  { src: '/4.4.webp' },
+  { src: '/4.5.webp' },
+  { src: '/4.6.webp' },
+  { src: '/4.7.webp' },
+  { src: '/4.8.webp' },
 ]
 
 const TAG_COLORS = {
@@ -70,6 +104,7 @@ function Album({ project, images, tags, onClose }) {
   const current = images[index]
   const tagStyle = TAG_COLORS[current.tagKey] || { bg: 'rgba(0,0,0,0.6)', text: '#fff' }
 
+
   return (
     <div className="album-overlay" onClick={onClose}>
       <div className="album-modal" onClick={e => e.stopPropagation()}>
@@ -91,9 +126,11 @@ function Album({ project, images, tags, onClose }) {
 
           <div className="album-img-wrap">
             <img key={index} src={current.src} alt={`${project.category} ${index + 1}`} className="album-img" />
-            <span className="album-tag" style={{ background: tagStyle.bg, color: tagStyle.text }}>
-              {tags[current.tagKey]}
-            </span>
+            {current.tagKey && (
+              <span className="album-tag" style={{ background: tagStyle.bg, color: tagStyle.text }}>
+                {tags[current.tagKey]}
+              </span>
+            )}
           </div>
 
           <button className="album-nav album-nav--next" onClick={next} aria-label="Seguinte">›</button>
@@ -113,9 +150,11 @@ function Album({ project, images, tags, onClose }) {
                 onClick={() => setIndex(i)}
               >
                 <img src={img.src} alt="" />
-                <span className="album-thumb-tag" style={{ background: thumbStyle.bg }}>
-                  {tags[img.tagKey]}
-                </span>
+                {img.tagKey && (
+                  <span className="album-thumb-tag" style={{ background: thumbStyle.bg }}>
+                    {tags[img.tagKey]}
+                  </span>
+                )}
               </button>
             )
           })}
@@ -128,7 +167,7 @@ function Album({ project, images, tags, onClose }) {
 export default function Projects() {
   const { t } = useLanguage()
   const [openAlbum, setOpenAlbum] = useState(null)
-  const ALBUMS = { 3: ALBUM_3, 5: ALBUM_5 }
+  const ALBUMS = { 1: ALBUM_1, 3: ALBUM_3, 4: ALBUM_4, 5: ALBUM_5, 6: ALBUM_6 }
 
   return (
     <section id="projects" className="projects section">
@@ -153,7 +192,7 @@ export default function Projects() {
                 </div>
               </div>
               <div className="projects__item-meta">
-                <span className="projects__item-cat">{project.category}</span>
+                <span className="projects__item-cat">{t.projectCategories[project.id]}</span>
                 <span className="projects__item-loc">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight:'0.3rem', verticalAlign:'middle'}}>
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
@@ -169,7 +208,7 @@ export default function Projects() {
 
       {openAlbum && (
         <Album
-          project={openAlbum}
+          project={{ ...openAlbum, category: t.projectCategories[openAlbum.id] }}
           images={ALBUMS[openAlbum.id]}
           tags={t.albumTags}
           onClose={() => setOpenAlbum(null)}

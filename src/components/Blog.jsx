@@ -96,7 +96,7 @@ export default function Blog() {
   }
 
   return (
-    <section id="blog" className="blog section">
+    <section id="blog" className="blog section" style={{ backgroundImage: 'url(/1.10.webp)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }}>
       <div className="container">
         <div className="blog__header">
           <p className="section-label">{t.blog.sectionLabel}</p>
@@ -129,20 +129,27 @@ export default function Blog() {
         ) : posts.length === 0 ? (
           <p className="blog__empty">{t.blog.empty}</p>
         ) : (
-          <div className="blog__grid">
-            {posts.map(post => (
-              <article key={post.id} className="blog__card" onClick={() => openFullPost(post.slug)}>
-                {post.cover_image
-                  ? <div className="blog__card-img"><img src={post.cover_image} alt={post.title} /></div>
-                  : <div className="blog__card-img blog__card-img--placeholder" />
-                }
-                <div className="blog__card-body">
-                  {post.category_name && <span className="blog__card-cat">{post.category_name}</span>}
-                  <h3 className="blog__card-title">{post.title}</h3>
-                  {post.excerpt && <p className="blog__card-excerpt">{post.excerpt}</p>}
-                  <span className="blog__card-date">{formatDate(post.published_at)}</span>
-                </div>
-              </article>
+          <div className="blog__list">
+            {posts.map((post, i) => (
+              <>
+                <article key={post.id} className="blog__card" onClick={() => openFullPost(post.slug)}>
+                  {post.cover_image
+                    ? <div className="blog__card-img"><img src={post.cover_image} alt={post.title} /></div>
+                    : <div className="blog__card-img blog__card-img--placeholder" />
+                  }
+                  <div className="blog__card-body">
+                    {post.category_name && <span className="blog__card-cat">{post.category_name}</span>}
+                    <h3 className="blog__card-title">{post.title}</h3>
+                    {post.excerpt && <p className="blog__card-excerpt">{post.excerpt}</p>}
+                    <span className="blog__card-date">{formatDate(post.published_at)}</span>
+                  </div>
+                </article>
+                {i < posts.length - 1 && (
+                  <div key={`sep-${i}`} className="blog__separator">
+                    <img src={`/sep${(i % 3) + 1}.webp`} alt="" aria-hidden="true" />
+                  </div>
+                )}
+              </>
             ))}
           </div>
         )}
@@ -176,14 +183,16 @@ export default function Blog() {
         }
         .blog__filter-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
         .blog__filter-btn.active { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
-        .blog__grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 1.5px;
+        .blog__list {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          width: 100%;
         }
         .blog__card {
           cursor: pointer; background: rgba(255,255,255,0.45);
           transition: background 0.15s;
+          width: 100%; max-width: 576px;
         }
         .blog__card:hover { background: rgba(255,255,255,0.75); }
         .blog__card-img {
@@ -193,17 +202,25 @@ export default function Blog() {
         .blog__card-img--placeholder { background: #ddd8ce; }
         .blog__card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
         .blog__card:hover .blog__card-img img { transform: scale(1.04); }
-        .blog__card-body { padding: 1rem; }
+        .blog__card-body { padding: 0.8rem 1rem; }
         .blog__card-cat {
-          font-size: 0.68rem; font-weight: 600; text-transform: uppercase;
-          letter-spacing: 0.1em; color: var(--color-primary); display: block; margin-bottom: 0.3rem;
+          font-size: 0.62rem; font-weight: 600; text-transform: uppercase;
+          letter-spacing: 0.1em; color: var(--color-primary); display: block; margin-bottom: 0.25rem;
         }
-        .blog__card-title { font-size: 0.95rem; font-weight: 600; line-height: 1.4; color: var(--color-text); margin-bottom: 0.4rem; }
-        .blog__card-excerpt { font-size: 0.8rem; color: var(--color-text-secondary); line-height: 1.6; margin-bottom: 0.5rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .blog__card-date { font-size: 0.72rem; color: #aaa; }
+        .blog__card-title { font-size: 0.88rem; font-weight: 600; line-height: 1.4; color: var(--color-text); margin-bottom: 0.35rem; }
+        .blog__card-excerpt { font-size: 0.76rem; color: var(--color-text-secondary); line-height: 1.6; margin-bottom: 0.4rem; }
+        .blog__card-date { font-size: 0.66rem; color: #aaa; }
+        .blog__separator {
+          width: 100%; max-width: 576px;
+          display: flex; justify-content: center;
+          padding: 0.5rem 0;
+        }
+        .blog__separator img {
+          max-width: 100%;
+          height: auto;
+          display: block;
+        }
         .blog__loading, .blog__empty { font-size: 0.9rem; color: var(--color-text-secondary); padding: 2rem 0; }
-        @media (max-width: 900px) { .blog__grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 580px) { .blog__grid { grid-template-columns: 1fr; } }
       `}</style>
     </section>
   )

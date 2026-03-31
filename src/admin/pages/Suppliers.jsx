@@ -1,18 +1,26 @@
 import { useState, useEffect } from 'react'
 
 const CATEGORIES = [
-  'Plantas', 'Substratos', 'Ferramentas', 'Revestimentos',
-  'Pedra', 'Água', 'Iluminação', 'Outro',
+  'Associações Profissionais', 'Parceiros Estratégicos',
+  'Plantas', 'Rega', 'Topografia', 'Pedra',
+  'Substratos', 'Ferramentas', 'Revestimentos', 'Água', 'Iluminação',
+  'Institucional', 'Rede Pessoal', 'Outro',
 ]
 
 const CATEGORY_COLORS = {
+  'Associações Profissionais': { color: '#1e3a8a', bg: '#dbeafe' },
+  'Parceiros Estratégicos': { color: '#065f46', bg: '#d1fae5' },
   'Plantas': { color: '#166534', bg: '#dcfce7' },
-  'Substratos': { color: '#92400e', bg: '#fef3c7' },
-  'Ferramentas': { color: '#1e3a8a', bg: '#dbeafe' },
-  'Revestimentos': { color: '#4c1d95', bg: '#ede9fe' },
+  'Rega': { color: '#0c4a6e', bg: '#e0f2fe' },
+  'Topografia': { color: '#78350f', bg: '#fde68a' },
   'Pedra': { color: '#374151', bg: '#f3f4f6' },
-  'Água': { color: '#0c4a6e', bg: '#e0f2fe' },
+  'Substratos': { color: '#92400e', bg: '#fef3c7' },
+  'Ferramentas': { color: '#3730a3', bg: '#e0e7ff' },
+  'Revestimentos': { color: '#4c1d95', bg: '#ede9fe' },
+  'Água': { color: '#164e63', bg: '#cffafe' },
   'Iluminação': { color: '#713f12', bg: '#fef9c3' },
+  'Institucional': { color: '#1f2937', bg: '#e5e7eb' },
+  'Rede Pessoal': { color: '#6b21a8', bg: '#f3e8ff' },
   'Outro': { color: '#374151', bg: '#f3f4f6' },
 }
 

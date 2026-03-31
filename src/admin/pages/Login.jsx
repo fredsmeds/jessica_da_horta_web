@@ -37,20 +37,37 @@ export default function Login({ onLogin }) {
         * { box-sizing: border-box; }
         .login-page {
           min-height: 100vh;
-          background: #f8f7f4;
+          position: relative;
           display: flex;
           align-items: center;
           justify-content: center;
           padding: 24px;
+          overflow: hidden;
+        }
+        .login-bg {
+          position: fixed;
+          inset: 0;
+          width: 100%; height: 100%;
+          object-fit: cover;
+          z-index: 0;
+        }
+        .login-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(0,0,0,0.45);
+          z-index: 1;
         }
         .login-card {
-          background: white;
+          position: relative;
+          z-index: 2;
+          background: rgba(255,255,255,0.92);
           border: 1px solid #ddddd0;
           border-radius: 8px;
           padding: 48px 40px;
           width: 100%;
           max-width: 400px;
           text-align: center;
+          backdrop-filter: blur(6px);
         }
         .login-logo {
           width: 80px;
@@ -153,6 +170,8 @@ export default function Login({ onLogin }) {
         .login-btn:disabled { opacity: 0.6; cursor: not-allowed; }
       `}</style>
       <div className="login-page">
+        <video className="login-bg" src="/admin.webm" autoPlay muted loop playsInline />
+        <div className="login-overlay" />
         <div className="login-card">
           <img src="/isotipo.webp" alt="Jessica da Horta" className="login-logo" />
           <h1 className="login-title">Jessica da Horta</h1>

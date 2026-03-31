@@ -236,8 +236,8 @@ export default function Navbar({ activeSection, onNavClick }) {
           font-weight: var(--weight-medium);
           letter-spacing: 0.06em;
           color: rgba(255,255,255,0.6);
-          transition: color var(--transition);
-          padding: 0.1rem 0.2rem;
+          transition: color 0.05s;
+          padding: 0.5rem 0.5rem;
         }
         .navbar--scrolled .navbar__lang-btn {
           color: var(--color-text-secondary);
