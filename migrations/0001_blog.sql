@@ -28,3 +28,13 @@ INSERT OR IGNORE INTO categories (slug, name) VALUES
   ('plantas-mediterranicas', 'Plantas Mediterrânicas'),
   ('microflorestas-urbanas', 'Microflorestas Urbanas'),
   ('noticias', 'Notícias');
+
+CREATE TABLE IF NOT EXISTS appointments (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  title TEXT NOT NULL,
+  date TEXT NOT NULL,
+  time TEXT DEFAULT '',
+  notes TEXT DEFAULT '',
+  created_at TEXT DEFAULT (datetime('now')),
+  updated_at TEXT DEFAULT (datetime('now'))
+);
