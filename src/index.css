@@ -67,7 +67,7 @@ body {
 @media (max-width: 768px) {
   body {
     background-image: url('/white_responsive.webp');
-    background-attachment: fixed;
+    background-attachment: scroll;
     background-size: cover;
     background-repeat: no-repeat;
   }

@@ -13,7 +13,7 @@ export default function Hero({ onScheduleClick }) {
           loop
           muted
           playsInline
-          preload="auto"
+          preload="none"
         >
           <source src="/hero.webm" type="video/webm" />
           <source src="/hero2.mp4" type="video/mp4" />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useLanguage } from '../i18n/index.jsx'
 
 function formatDate(str) {
@@ -96,7 +96,7 @@ export default function Blog() {
   }
 
   return (
-    <section id="blog" className="blog section blog--bg">
+    <section id="blog" className="blog section" style={{ backgroundImage: 'url(/1.10.webp)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }}>
       <div className="container">
         <div className="blog__header">
           <p className="section-label">{t.blog.sectionLabel}</p>
@@ -131,10 +131,10 @@ export default function Blog() {
         ) : (
           <div className="blog__list">
             {posts.map((post, i) => (
-              <React.Fragment key={post.id}>
-                <article className="blog__card" onClick={() => openFullPost(post.slug)}>
+              <>
+                <article key={post.id} className="blog__card" onClick={() => openFullPost(post.slug)}>
                   {post.cover_image
-                    ? <div className="blog__card-img"><img src={post.cover_image} alt={post.title} loading="lazy" /></div>
+                    ? <div className="blog__card-img"><img src={post.cover_image} alt={post.title} /></div>
                     : <div className="blog__card-img blog__card-img--placeholder" />
                   }
                   <div className="blog__card-body">
@@ -145,11 +145,11 @@ export default function Blog() {
                   </div>
                 </article>
                 {i < posts.length - 1 && (
-                  <div className="blog__separator">
-                    <img src={`/sep${(i % 3) + 1}.webp`} alt="" aria-hidden="true" loading="lazy" />
+                  <div key={`sep-${i}`} className="blog__separator">
+                    <img src={`/sep${(i % 3) + 1}.webp`} alt="" aria-hidden="true" />
                   </div>
                 )}
-              </React.Fragment>
+              </>
             ))}
           </div>
         )}
@@ -163,15 +163,6 @@ export default function Blog() {
       {openPost && <PostModal post={openPost} onClose={() => setOpenPost(null)} />}
 
       <style>{`
-        .blog--bg {
-          background-image: url(/1.10.webp);
-          background-size: cover;
-          background-position: center;
-          background-attachment: fixed;
-        }
-        @media (max-width: 768px) {
-          .blog--bg { background-attachment: scroll; }
-        }
         .blog__header {
           background: rgba(255,255,255,0.30);
           padding: 1.5rem;
