@@ -1,6 +1,7 @@
 const USERS = [
-  { id: 'jessica', email: 'jessicadhg.pais.agem@gmail.com', name: 'Jessica' },
-  { id: 'freddy',  email: 'fmroldanrivero@gmail.com',       name: 'Freddy (Webmaster)' },
+  { id: 'jessica',    email: 'jessicadhg.pais.agem@gmail.com', name: 'Jessica' },
+  { id: 'freddy',     email: 'fmroldanrivero@gmail.com',       name: 'Freddy (Webmaster)' },
+  { id: 'internercia',email: 'internercia@gmail.com',          name: 'Internercia' },
 ]
 
 export async function onRequestPost(context) {

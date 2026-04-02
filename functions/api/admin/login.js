@@ -6,6 +6,7 @@ async function sha256(str) {
 const EMAIL_TO_USER = {
   'jessicadhg.pais.agem@gmail.com': 'jessica',
   'fmroldanrivero@gmail.com': 'freddy',
+  'internercia@gmail.com': 'internercia',
 }
 
 export async function onRequestPost(context) {
