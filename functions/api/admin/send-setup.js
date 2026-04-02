@@ -16,7 +16,7 @@ export async function onRequestPost(context) {
 
     await env.LEADS_KV.put(`admin:setup_token:${user.id}`, token, { expirationTtl: 86400 })
 
-    const setupLink = `https://sso.jessicadahorta.com/admin?setup=${token}&user=${user.id}`
+    const setupLink = `https://jessicadahorta.com/admin?setup=${token}&user=${user.id}`
 
     const htmlBody = `
       <div style="font-family:Georgia,serif;max-width:520px;margin:0 auto;color:#1a1a18;">
