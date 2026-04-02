@@ -386,6 +386,40 @@ const es = {
     close: 'Cerrar',
     content: `Los datos personales recopilados a través de los formularios de este sitio web se utilizan exclusivamente para responder a sus solicitudes y para comunicación relacionada con los servicios de Jessica da Horta Garden Design. No compartimos sus datos con terceros sin su consentimiento. Tiene derecho a acceder, corregir o solicitar la eliminación de sus datos personales. Para ejercer estos derechos, contáctenos en contact@jessicadahorta.com.`,
   },
+
+  // Cookie Consent
+  cookies: {
+    title: 'Cookies esenciales',
+    text: 'Este sitio solo utiliza cookies estrictamente necesarias para guardar el progreso de los formularios y la preferencia de idioma. No utilizamos cookies de seguimiento, publicidad ni análisis. Al enviar un formulario, sus datos se comparten con Jessica da Horta Garden Design según nuestra Política de Privacidad.',
+    accept: 'Aceptar',
+    termsLink: 'Términos de Uso',
+  },
+
+  // Terms of Use
+  terms: {
+    title: 'Términos de Uso',
+    close: 'Cerrar',
+    content: `1. Información General
+Este sitio web es propiedad de Jessica da Horta Garden Design y tiene como fin presentar los servicios de paisajismo, diseño de jardines y consultoría ofrecidos.
+
+2. Propiedad Intelectual
+Todos los contenidos — incluyendo textos, fotografías, ilustraciones y diseño — son propiedad de Jessica da Horta Garden Design o se utilizan con autorización. Queda prohibida su reproducción, total o parcial, sin autorización previa por escrito.
+
+3. Formularios y Datos Personales
+Los formularios de contacto y programación recogen datos personales (nombre, email, teléfono, etc.) exclusivamente para responder a su solicitud. Los datos se tratan conforme a nuestra Política de Privacidad y al Reglamento General de Protección de Datos (RGPD).
+
+4. Almacenamiento Local
+Solo utilizamos almacenamiento local esencial (localStorage/sessionStorage) para guardar el progreso del formulario de programación y la preferencia de idioma. No instalamos cookies de terceros.
+
+5. Prestación de Servicios
+La información publicada es meramente indicativa. La contratación de cualquier servicio requiere un acuerdo formal entre las partes. Los precios mostrados pueden actualizarse sin previo aviso.
+
+6. Limitación de Responsabilidad
+Jessica da Horta Garden Design no garantiza que el sitio web esté siempre disponible o libre de errores. No se responsabiliza de los daños derivados del uso del sitio.
+
+7. Ley Aplicable
+Estos términos se rigen por la legislación portuguesa. Cualquier litigio se someterá a los tribunales competentes de Portugal.`,
+  },
 }
 
 export default es
