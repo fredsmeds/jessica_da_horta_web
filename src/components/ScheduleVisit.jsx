@@ -569,6 +569,7 @@ function saveProgress(data, step) {
 // ── Initial data ──────────────────────────────────────────────────────────────
 
 const initialData = {
+  _hp: '',
   // Step 1
   fullName: '', phone: '', email: '', address: '', postalCode: '',
   distanceKm: null, travelFee: null, roundTripKm: null,
@@ -607,6 +608,7 @@ export default function ScheduleVisit() {
     return { ...initialData, ...fields }
   })
   const [status, setStatus] = useState(null)
+  const [formTs] = useState(() => Date.now())
   const [showPrivacy, setShowPrivacy] = useState(false)
   const [stepError, setStepError] = useState('')
   const hasSavedProgress = !!loadSaved()
@@ -680,7 +682,7 @@ export default function ScheduleVisit() {
       const res = await fetch('/api/schedule', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...textData, clientPdfBase64, jessicaPdfBase64, attachments }),
+        body: JSON.stringify({ ...textData, _ts: formTs, clientPdfBase64, jessicaPdfBase64, attachments }),
       })
       if (!res.ok) {
         const body = await res.json().catch(() => ({}))
@@ -757,6 +759,7 @@ export default function ScheduleVisit() {
             {status === 'pdfError' && <div className="alert alert-error">Ocorreu um erro ao gerar o documento PDF. Por favor tente novamente.</div>}
 
             <form onSubmit={step === TOTAL_STEPS ? handleSubmit : e => { e.preventDefault(); handleNext() }}>
+              <input type="text" name="_hp" value={data._hp} onChange={e => set('_hp', e.target.value)} style={{display:'none'}} tabIndex={-1} autoComplete="off" />
               {step === 1 && <Step1 data={data} set={set} t={t} stepError={stepError} />}
               {step === 2 && <Step2 data={data} set={set} t={t} />}
               {step === 3 && <Step3 data={data} set={set} t={t} />}
