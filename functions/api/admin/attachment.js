@@ -3,7 +3,7 @@ import { requireAuth } from '../../_shared/adminAuth.js'
 export async function onRequestGet(context) {
   const { request, env } = context
 
-  if (!requireAuth(request)) {
+  if (!requireAuth(request, env)) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), {
       status: 401,
       headers: { 'Content-Type': 'application/json' },
