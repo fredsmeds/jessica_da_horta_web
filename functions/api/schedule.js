@@ -4,7 +4,7 @@
  * Sends full form data + internal PDF (with pricing) to Jessica
  * Sends a confirmation + client PDF (no pricing) to the customer
  */
-import { honeypotCheck, isRateLimited, getIP, BOT_RESPONSE } from '../../_shared/botProtection.js'
+import { honeypotCheck, isRateLimited, getIP, BOT_RESPONSE } from '../_shared/botProtection.js'
 
 export async function onRequestPost(context) {
   const { request, env } = context
