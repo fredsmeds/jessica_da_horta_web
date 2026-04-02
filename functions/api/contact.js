@@ -2,7 +2,7 @@
  * POST /api/contact
  * Sends a contact form email via Resend API
  */
-import { honeypotCheck, isRateLimited, getIP, BOT_RESPONSE } from '../../_shared/botProtection.js'
+import { honeypotCheck, isRateLimited, getIP, BOT_RESPONSE } from '../_shared/botProtection.js'
 
 export async function onRequestPost(context) {
   const { request, env } = context
