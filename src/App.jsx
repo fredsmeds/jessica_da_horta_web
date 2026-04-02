@@ -10,6 +10,7 @@ import Footer from './components/Footer.jsx'
 import FakeCursor from './components/FakeCursor.jsx'
 import BlogPage from './pages/BlogPage.jsx'
 import SchedulePage from './pages/SchedulePage.jsx'
+import CookieConsent from './components/CookieConsent.jsx'
 import { useLanguage } from './i18n/index.jsx'
 
 // Leaf landing spots per section, as fractions of each section's bounding rect.
@@ -395,12 +396,38 @@ function MainPage() {
   )
 }
 
-export default function App() {
+function TermsModal({ onClose }) {
+  const { t } = useLanguage()
   return (
-    <Routes>
-      <Route path="/" element={<MainPage />} />
-      <Route path="/blog" element={<BlogPage />} />
-      <Route path="/agendar" element={<SchedulePage />} />
-    </Routes>
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal" onClick={e => e.stopPropagation()}>
+        <div className="modal__header">
+          <h3>{t.terms.title}</h3>
+          <button className="modal__close" onClick={onClose}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        <div className="modal__body" style={{ whiteSpace: 'pre-line' }}>{t.terms.content}</div>
+        <button className="btn btn-outline" onClick={onClose}>{t.terms.close}</button>
+      </div>
+    </div>
+  )
+}
+
+export default function App() {
+  const [showTerms, setShowTerms] = useState(false)
+
+  return (
+    <>
+      <Routes>
+        <Route path="/" element={<MainPage />} />
+        <Route path="/blog" element={<BlogPage />} />
+        <Route path="/agendar" element={<SchedulePage />} />
+      </Routes>
+      <CookieConsent onTermsClick={() => setShowTerms(true)} />
+      {showTerms && <TermsModal onClose={() => setShowTerms(false)} />}
+    </>
   )
 }

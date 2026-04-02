@@ -385,6 +385,40 @@ const en = {
     close: 'Close',
     content: `Personal data collected through the forms on this website is used exclusively to respond to your requests and for communication related to Jessica da Horta Garden Design's services. We do not share your data with third parties without your consent. You have the right to access, correct or request the deletion of your personal data. To exercise these rights, contact us at contact@jessicadahorta.com.`,
   },
+
+  // Cookie Consent
+  cookies: {
+    title: 'Essential cookies',
+    text: 'This site only uses strictly necessary cookies to save form progress and language preference. We do not use tracking, advertising or analytics cookies. When you submit a form, your data is shared with Jessica da Horta Garden Design as described in our Privacy Policy.',
+    accept: 'Accept',
+    termsLink: 'Terms of Use',
+  },
+
+  // Terms of Use
+  terms: {
+    title: 'Terms of Use',
+    close: 'Close',
+    content: `1. General Information
+This website is owned by Jessica da Horta Garden Design and is intended to present landscape design, garden design and consultancy services.
+
+2. Intellectual Property
+All content — including texts, photographs, illustrations and design — is the property of Jessica da Horta Garden Design or used with permission. Reproduction, in whole or in part, without prior written consent is prohibited.
+
+3. Forms and Personal Data
+The contact and scheduling forms collect personal data (name, email, phone, etc.) solely to respond to your request. Data is processed in accordance with our Privacy Policy and the General Data Protection Regulation (GDPR).
+
+4. Local Storage
+We only use essential local storage (localStorage/sessionStorage) to save scheduling form progress and language preference. We do not install third-party cookies.
+
+5. Service Provision
+Published information is indicative only. Hiring any service requires a formal agreement between the parties. Prices shown may be updated without prior notice.
+
+6. Limitation of Liability
+Jessica da Horta Garden Design does not guarantee that the website will always be available or error-free. We are not liable for damages resulting from the use of this site.
+
+7. Applicable Law
+These terms are governed by Portuguese law. Any dispute shall be submitted to the competent courts in Portugal.`,
+  },
 }
 
 export default en
