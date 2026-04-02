@@ -1,4 +1,4 @@
-const VALID_USERS = ['jessica', 'freddy']
+const VALID_USERS = ['jessica', 'freddy', 'internercia']
 
 async function sha256(str) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str))
