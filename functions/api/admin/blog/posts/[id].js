@@ -7,7 +7,7 @@ export async function onRequest(context) {
   const { request, env, params } = context
   const id = params.id
 
-  if (!requireAuth(request)) {
+  if (!requireAuth(request, env)) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } })
   }
 

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 export default function Login({ onLogin }) {
-  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
@@ -15,12 +15,14 @@ export default function Login({ onLogin }) {
       const res = await fetch('/api/admin/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ email, password }),
       })
       const data = await res.json()
       if (res.ok && data.token) {
         sessionStorage.setItem('jdh_admin_token', data.token)
         onLogin()
+      } else if (data.error === 'password_not_set') {
+        setError('Palavra-passe não configurada. Verifique o seu email para o link de configuração.')
       } else {
         setError('Credenciais inválidas')
       }
@@ -179,14 +181,14 @@ export default function Login({ onLogin }) {
 
           <form className="login-form" onSubmit={handleSubmit} autoComplete="off">
             <div className="login-field">
-              <label className="login-label" htmlFor="username">Utilizador</label>
+              <label className="login-label" htmlFor="email">Email</label>
               <input
-                id="username"
+                id="email"
                 className="login-input"
-                type="text"
-                value={username}
-                onChange={e => setUsername(e.target.value)}
-                autoComplete="off"
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                autoComplete="email"
                 required
               />
             </div>
