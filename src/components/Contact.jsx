@@ -21,7 +21,7 @@ function PrivacyModal({ t, onClose }) {
 }
 
 function GeneralForm({ t, onPrivacyClick }) {
-  const [form, setForm] = useState({ name: '', email: '', phone: '', zip: '', message: '', privacy: false })
+  const [form, setForm] = useState({ name: '', email: '', phone: '', zip: '', message: '', privacy: false, _hp: '', _ts: Date.now() })
   const [status, setStatus] = useState(null) // null | 'loading' | 'success' | 'error'
 
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }))
@@ -53,6 +53,7 @@ function GeneralForm({ t, onPrivacyClick }) {
 
   return (
     <form onSubmit={handleSubmit} noValidate>
+      <input type="text" name="_hp" value={form._hp} onChange={e => set('_hp', e.target.value)} style={{display:'none'}} tabIndex={-1} autoComplete="off" />
       {status === 'error' && <div className="alert alert-error">{t.contact.errorText}</div>}
       <div className="form-row">
         <div className="form-group">
@@ -109,7 +110,7 @@ function GeneralForm({ t, onPrivacyClick }) {
 }
 
 function PricesForm({ t, onPrivacyClick }) {
-  const [form, setForm] = useState({ name: '', email: '', phone: '', zip: '', message: '', privacy: false })
+  const [form, setForm] = useState({ name: '', email: '', phone: '', zip: '', message: '', privacy: false, _hp: '', _ts: Date.now() })
   const [status, setStatus] = useState(null)
 
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }))
@@ -137,6 +138,7 @@ function PricesForm({ t, onPrivacyClick }) {
 
   return (
     <form onSubmit={handleSubmit} noValidate>
+      <input type="text" name="_hp" value={form._hp} onChange={e => set('_hp', e.target.value)} style={{display:'none'}} tabIndex={-1} autoComplete="off" />
       {status === 'error' && <div className="alert alert-error">{t.contact.errorText}</div>}
       <div className="form-row">
         <div className="form-group">
