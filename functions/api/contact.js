@@ -2,11 +2,19 @@
  * POST /api/contact
  * Sends a contact form email via Resend API
  */
+import { honeypotCheck, isRateLimited, getIP, BOT_RESPONSE } from '../../_shared/botProtection.js'
+
 export async function onRequestPost(context) {
   const { request, env } = context
 
   try {
     const body = await request.json()
+
+    if (honeypotCheck(body)) return BOT_RESPONSE
+    if (await isRateLimited(env.LEADS_KV, getIP(request), 'contact')) {
+      return new Response(JSON.stringify({ error: 'too_many_requests' }), { status: 429 })
+    }
+
     const { name, email, phone, zip, message, experience, subject } = body
 
     const RESEND_API_KEY = env.RESEND_API_KEY
