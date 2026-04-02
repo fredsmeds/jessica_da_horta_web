@@ -32,7 +32,9 @@ export function getIP(request) {
 }
 
 // Silent 200 — don't reveal detection to bots
-export const BOT_RESPONSE = new Response(JSON.stringify({ ok: true }), {
-  status: 200,
-  headers: { 'Content-Type': 'application/json' },
-})
+export function botResponse() {
+  return new Response(JSON.stringify({ ok: true }), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json' },
+  })
+}
